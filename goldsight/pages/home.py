@@ -1,240 +1,246 @@
 # goldsight/pages/home.py
 import reflex as rx
-from goldsight.components import navbar  # Assuming you have a navbar
+from goldsight.components import page_layout
+from goldsight.utils.design_system import (
+    Colors,
+    Typography,
+    Spacing,
+    Layout,
+    card_style
+)
 
 # ======================================================================
 # 1. HELPER COMPONENT: NAV_CARD
-# (Based on your image reference)
 # ======================================================================
 def nav_card(
     title: str,
     desc: str,
     route: str,
     icon_name: str,
-    icon_color: str = "blue"
+    icon_color: str = "amber"  # Changed default to amber
 ) -> rx.Component:
     """
-    A clickable navigation card, styled after the user's reference image.
+    A clickable navigation card using design system.
     """
     return rx.link(
         rx.flex(
-            # Vstack for all content
             rx.vstack(
                 # Icon
                 rx.icon(
                     tag=icon_name,
                     size=32,
-                    color_scheme=icon_color,
-                    margin_bottom="0.5em"
+                    color_scheme=icon_color
                 ),
+                
                 # Title
                 rx.heading(
                     title,
-                    size="5",
+                    size=Typography.SUBSECTION,  # Use design system
                     weight="bold",
-                    color_scheme="gray"
+                    color_scheme=Colors.NEUTRAL
                 ),
+                
                 # Description
                 rx.text(
                     desc,
-                    color_scheme="gray",
-                    size="2"  # Small font for description
+                    color_scheme=Colors.NEUTRAL,
+                    size=Typography.SMALL
                 ),
                 
-                # Spacer to push the "Learn more" link to the bottom
                 rx.spacer(),
                 
                 # "Learn more" link
                 rx.hstack(
-                    rx.text("Learn more", color_scheme="blue", size="2"),
+                    rx.text(
+                        "Learn more",
+                        color_scheme=Colors.PRIMARY,  # Amber accent
+                        size=Typography.SMALL
+                    ),
                     rx.icon(
                         tag="arrow-right",
                         size=16,
-                        color_scheme="blue"
+                        color_scheme=Colors.PRIMARY
                     ),
                     align="center",
-                    spacing="1",
-                    margin_top="1.5em"  # Create space
+                    spacing=Spacing.TIGHT
                 ),
                 
-                align="start",  # Align content to the left
-                spacing="2",
-                height="100%"  # Helps the spacer work correctly
+                align="start",
+                spacing=Spacing.TIGHT,
+                height="100%"
             ),
             
-            # Card styling
+            # Use design system card style
             direction="column",
-            background_color=rx.color("gray", 2),  # Very light gray background
-            border_radius="var(--radius-4)",  # Soft corners
-            border="1px solid",
-            border_color=rx.color("gray", 4),  # Light border
-            padding="1.5em",
-            height="100%",  # Important for grid layout
-            
-            # Hover effect
-            _hover={
-                "border_color": rx.color("blue", 7),
-                "box_shadow": "0 4px 12px 0 rgba(0, 0, 0, 0.05)",
-                "transform": "translateY(-2px)"
-            },
-            transition="all 0.2s ease-in-out"
+            **card_style(hover=True),
+            height="100%"
         ),
         href=route,
-        text_decoration="none",  # Remove link underline
+        text_decoration="none"
     )
 
 
 # ======================================================================
-# 2. REDESIGNED HOME PAGE (STORYTELLING STYLE)
+# 2. REDESIGNED HOME PAGE (CENTERED & LIGHTER)
 # ======================================================================
 def home_page() -> rx.Component:
     """
-    The redesigned home page, focusing on storytelling like a research blog.
-    All components are centered, and text is justified.
+    Home page with consistent design system.
     """
-    return rx.fragment(
-        navbar(),
-        
-        # The Container component sets a max_width and centers itself.
+    return page_layout(
         rx.container(
-            
-            # This main Vstack centers all of its children (the sections).
             rx.vstack(
-                
-                # --- Section 1: Hero ---
-                # This section's content should be centered.
+                # --- Hero Section ---
                 rx.vstack(
                     rx.heading(
                         "🔱 GoldSight",
-                        size="9",
+                        size=Typography.HERO,  # size="9"
                         weight="bold",
-                        color_scheme="yellow"  # Gold accent
+                        color_scheme=Colors.PRIMARY  # Amber
                     ),
                     rx.heading(
                         "An AI-Powered Gold Price Prediction Journey",
-                        size="7",
-                        color_scheme="gray",
+                        size=Typography.SECTION,  # size="6" (not "7" - follow hierarchy)
+                        color_scheme=Colors.NEUTRAL,
                         weight="medium"
                     ),
-                    spacing="3",
+                    spacing=Spacing.COMPONENT,
                     align="center",
-                    padding_top="4em",
-                    padding_bottom="2em",
+                    width="100%",
+                    padding_top="2em",  # Reduced from 4em to 2em
+                    padding_bottom="2em"
+                ),
+
+                # --- Why Predict Gold? ---
+                rx.vstack(
+                    rx.heading(
+                        "Why Predict Gold?",
+                        size=Typography.SECTION,  # size="6"
+                        weight="bold",
+                        align="center"
+                    ),
+                    rx.text(
+                        "Gold is a critical asset in financial markets, serving as a hedge against inflation and "
+                        "economic instability. Predicting its price helps investors make better decisions. "
+                        "Traditional forecasting methods often fail to capture the complex market dynamics, "
+                        "making Machine Learning an ideal approach.",
+                        text_align="justify", 
+                        color_scheme=Colors.NEUTRAL,
+                        size=Typography.BODY,  # size="4"
+                        line_height="1.7"
+                    ),
+                    align="center",
+                    max_width="800px",
+                    spacing=Spacing.COMPONENT,
                     width="100%"
                 ),
 
-                # --- Section 2: Why Predict Gold? (The Story) ---
-                # This Vstack is centered by its parent.
-                # Its own alignment is "start" (left) to allow text justification.
+                # --- Project Objective ---
                 rx.vstack(
-                    rx.heading("Why Predict Gold?", size="6", weight="bold"),
-                    rx.text(
-                        "Gold is a critical asset in financial markets, serving as a hedge against inflation and ",
-                        "economic instability. Predicting its price helps investors make better decisions. ",
-                        "Traditional forecasting methods often fail to capture the complex market dynamics, ",
-                        "making Machine Learning an ideal approach.",
-                        # This is the key change for justify
-                        text_align="justify", 
-                        color_scheme="gray",
-                        size="4"
+                    rx.heading(
+                        "Our Objective",
+                        size=Typography.SECTION,  # size="6"
+                        weight="bold",
+                        align="center"
                     ),
-                    align="start", # Changed from "center"
-                    max_width="800px", # Keep text readable
-                    spacing="3"
-                ),
-
-                # --- Section 3: Project Objective ---
-                # Same as above: centered block, justified text.
-                rx.vstack(
-                    rx.heading("Our Objective", size="6", weight="bold"),
                     rx.text(
-                        "This project aims to develop a system using Machine Learning to forecast gold prices. ",
-                        "We collected historical gold data and 13+ related economic indicators to train predictive models. ",
-                        "This interactive platform visualizes trends and provides forecasts, ",
+                        "This project aims to develop a system using Machine Learning to forecast gold prices. "
+                        "We collected historical gold data and 13+ related economic indicators to train predictive models. "
+                        "This interactive platform visualizes trends and provides forecasts, "
                         "allowing users to analyze price models and make informed decisions.",
-                        # This is the key change for justify
                         text_align="justify",
-                        color_scheme="gray",
-                        size="4"
+                        color_scheme=Colors.NEUTRAL,
+                        size=Typography.BODY,  # size="4"
+                        line_height="1.7"
                     ),
-                    align="start", # Changed from "center"
-                    max_width="800px", # Keep text readable
-                    spacing="3"
+                    align="center",
+                    max_width="800px",
+                    spacing=Spacing.COMPONENT,
+                    width="100%"
                 ),
                 
-                # --- Section 4: The Research Journey (Navigation) ---
-                # This section's content (grid) should be centered.
+                # --- Research Journey Navigation ---
                 rx.vstack(
-                    rx.heading("Explore Our Research Journey", size="7", padding_top="1em"),
+                    rx.heading(
+                        "Explore Our Research Journey",
+                        size=Typography.SECTION,  # size="6" (not "7")
+                        weight="bold",
+                        align="center"
+                    ),
                     rx.text(
                         "Follow our step-by-step process, from data to deployment.",
-                        size="4",
-                        color_scheme="gray"
+                        size=Typography.BODY,
+                        color_scheme=Colors.NEUTRAL,
+                        align="center"
                     ),
                     
-                    rx.grid(
-                        nav_card(
-                            title="Chapter 1: The Data",
-                            desc="See the 13+ market and macro indicators we collected.",
-                            route="/data-collection",
-                            icon_name="database",
-                            icon_color="gray"
+                    # Navigation cards grid
+                    rx.center(
+                        rx.grid(
+                            nav_card(
+                                title="Chapter 1: The Data",
+                                desc="See the 13+ market and macro indicators we collected.",
+                                route="/data-collection",
+                                icon_name="database",
+                                icon_color=Colors.NEUTRAL
+                            ),
+                            nav_card(
+                                title="Chapter 2: The Exploration",
+                                desc="Discover the key correlations and insights from our EDA.",
+                                route="/eda",
+                                icon_name="bar-chart-big",
+                                icon_color=Colors.WARNING  # Orange
+                            ),
+                            nav_card(
+                                title="Chapter 3: The Models",
+                                desc="Our journey comparing 8 models, from ARIMA to LSTM.",
+                                route="/modeling",
+                                icon_name="cpu",
+                                icon_color=Colors.SECONDARY  # Blue
+                            ),
+                            nav_card(
+                                title="Chapter 4: The Results",
+                                desc="Analyze model performance, error, and key findings.",
+                                route="/insights",
+                                icon_name="pie-chart",
+                                icon_color="purple"
+                            ),
+                            nav_card(
+                                title="Final App: The Forecast Tool",
+                                desc="Try our best-performing LSTM model to get live forecasts.",
+                                route="/forecast",
+                                icon_name="trending-up",
+                                icon_color=Colors.SUCCESS  # Green
+                            ),
+                            nav_card(
+                                title="Source Code",
+                                desc="View the complete source code and notebooks on GitHub.",
+                                route="https://github.com/HuyPham171-hub/gold-price-prediction",
+                                icon_name="github",
+                                icon_color="gray"
+                            ),
+                            
+                            columns="3",
+                            spacing=Spacing.CONTENT,  # spacing="4"
+                            width="100%"
                         ),
-                        nav_card(
-                            title="Chapter 2: The Exploration",
-                            desc="Discover the key correlations and insights from our EDA.",
-                            route="/eda",
-                            icon_name="bar-chart-big",
-                            icon_color="orange"
-                        ),
-                        nav_card(
-                            title="Chapter 3: The Models",
-                            desc="Our journey comparing 8 models, from ARIMA to LSTM.",
-                            route="/modeling",
-                            icon_name="cpu"
-                        ),
-                        nav_card(
-                            title="Chapter 4: The Results",
-                            desc="Analyze model performance, error, and key findings.",
-                            route="/insights",
-                            icon_name="pie-chart",
-                            icon_color="purple"
-                        ),
-                        nav_card(
-                            title="Final App: The Forecast Tool",
-                            desc="Try our best-performing LSTM model to get live forecasts.",
-                            route="/forecast",
-                            icon_name="trending-up",
-                            icon_color="green"
-                        ),
-                        nav_card(
-                            title="Source Code",
-                            desc="View the complete source code and notebooks on GitHub.",
-                            route="/api-docs",
-                            icon_name="github",
-                            icon_color="black"
-                        ),
-                        
-                        columns="3",  # 3-column grid
-                        spacing="4",  # Spacing between cards
-                        width="100%",
-                        max_width="1000px", # Constrain grid width
-                        margin_top="2em"
+                        width="100%"
                     ),
+                    
                     align="center",
-                    spacing="3",
+                    spacing=Spacing.COMPONENT,
                     width="100%"
                 ),
                 
-                # --- Main Vstack Settings ---
-                spacing="7", # Larger spacing between main sections
-                align="center", # This centers all children Vstacks
-                padding_x="2em",
-                padding_bottom="4em"
+                # Main vstack settings
+                spacing=Spacing.SECTION,  # spacing="6" (32px between sections)
+                align="center",
+                width="100%"
             ),
             
-            # --- Container Settings ---
-            max_width="1200px", # Max width of the content
-            padding=0 # Ensure container has no padding to conflict with vstack
+            max_width=Layout.MAX_WIDTH_WIDE,  # "1200px"
+            padding_x="2em",
+            padding_y="3em",
+            margin_x="auto"
         )
     )

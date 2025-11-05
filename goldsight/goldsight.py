@@ -16,12 +16,18 @@ class State(rx.State):
     pass
 
 
-# Create app
+# Create app with Amber (Gold) theme
 app = rx.App(
     theme=rx.theme(
         appearance="light",
-        accent_color="blue",
-    )
+        accent_color="amber",  # Gold/Amber for finance theme
+        gray_color="gray",     # Neutral colors
+        radius="large",        # Rounded corners
+    ),
+
+    stylesheets=[
+        "https://cdn.jsdelivr.net/npm/prism-theme-one-dark@1.0.0/prism-onedark.css"
+    ]
 )
 
 # Add pages with routes
