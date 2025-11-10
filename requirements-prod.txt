@@ -1,10 +1,10 @@
-# Production dependencies for Render.com deployment
+# Production dependencies for Render.com deployment (Linux environment)
 # Core framework
 reflex>=0.6.0
 
 # Data processing
-pandas>=2.0.0
-numpy>=1.24.0
+pandas>=2.0.0,<2.3.0
+numpy>=1.24.0,<2.0.0
 
 # Visualization
 plotly>=5.18.0
@@ -15,3 +15,5 @@ xlrd>=2.0.1
 
 # Additional dependencies
 python-dateutil>=2.8.0
+
+# Note: pywin32 is Windows-only and NOT needed for Linux deployment

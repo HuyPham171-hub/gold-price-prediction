@@ -1,13 +1,19 @@
 services:
   - type: web
     name: goldsight
-    env: python
+    runtime: python
     region: singapore
     plan: free
-    buildCommand: "pip install --upgrade pip && pip install -r requirements-prod.txt && reflex init"
-    startCommand: "reflex run --env prod --backend-host 0.0.0.0 --backend-port $PORT"
+    branch: main
+    
+    buildCommand: |
+      pip install --upgrade pip setuptools wheel
+      pip install -r requirements-prod.txt
+      reflex init
+      reflex export --frontend-only
+    
+    startCommand: "reflex run --env prod --backend-only"
+    
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0
-      - key: PORT
-        value: 8000
+        value: 3.11.9
