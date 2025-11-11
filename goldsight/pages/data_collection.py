@@ -1,5 +1,3 @@
-"""Chapter 1: Data Collection - The Foundation of Gold Price Prediction"""
-
 import reflex as rx
 from goldsight.components import page_layout, chapter_progress
 
@@ -67,27 +65,6 @@ def step_header(step_number: int, title: str, description: str) -> rx.Component:
         width="100%",
         margin_bottom="1em"
     )
-
-
-# def code_snippet(code: str, language: str = "python") -> rx.Component:
-#     """Display syntax highlighted code block."""
-#     return rx.box(
-#         rx.code_block(
-#             code,
-#             language=language,
-#             show_line_numbers=True,
-#             theme="dark",
-#             can_copy=True,
-#             copy_button_margin="0.5em"
-#         ),
-#         width="100%",
-#         overflow_x="auto",
-#         border_radius="var(--radius-3)",
-#         border=f"1px solid {rx.color('gray', 6)}",
-#         background_color="#1e1e1e",
-#         margin_bottom="2em"
-#     )
-
 
 def feature_item_with_dialog(
     feature_name: str,
@@ -193,70 +170,6 @@ def data_source_card(
 def data_collection_page() -> rx.Component:
     """Chapter 1: Data Collection - Storytelling layout."""
     
-    # Code snippets from actual notebook
-    code_yfinance = """import yfinance as yf
-
-tickers = {
-    'GC=F': 'Gold_Futures',
-    'SI=F': 'Silver_Futures',
-    'CL=F': 'Crude_Oil',
-    '^GSPC': 'SP_500',
-    '^IXIC': 'NASDAQ',
-    'GLD': 'Gold_ETF'
-}
-
-# Download 'Close' price data
-raw_data = yf.download(list(tickers.keys()), start='2000-01-01', auto_adjust=False)
-
-# Extract Close prices
-close_data = raw_data['Close'].copy()
-
-# Rename columns to descriptive names
-close_data = close_data.rename(columns=tickers)
-"""
-
-    code_fred = """from fredapi import Fred
-import pandas as pd
-
-fred = Fred(api_key='YOUR_API_KEY')
-start_date = '2000-01-01'
-
-# Download each macroeconomic indicator as a DataFrame
-indicators = {
-    'CPI': 'CPIAUCSL',
-    'Fed_Funds_Rate': 'FEDFUNDS',
-    'M2_Supply': 'M2SL',
-    'Unemployment': 'UNRATE',
-    'Treasury_Yield_10Y': 'GS10',
-    'Real_Interest_Rate': 'DFII10',
-    'USD_Index': 'DTWEXBGS'
-}
-
-macro_monthly = pd.DataFrame()
-real_interest_rate = pd.DataFrame()
-usd_index = pd.DataFrame()
-
-for name, code in indicators.items():
-    series = fred.get_series(code, observation_start=start_date)
-    series = series.to_frame(name=name)
-    series.index.name = 'Date'
-    if name == 'USD_Index':
-        usd_index = series
-    elif name == 'Real_Interest_Rate':
-        real_interest_rate = series
-    else:
-        if macro_monthly.empty:
-            macro_monthly = series
-        else:
-            macro_monthly = macro_monthly.join(series, how='outer')
-"""
-
-    code_vix = """import yfinance as yf 
-
-vix = yf.download("^VIX", start="2000-01-01")
-close_vix = vix["Close"]
-"""
-    
     return page_layout(
         rx.flex(
             rx.vstack(
@@ -283,7 +196,7 @@ close_vix = vix["Close"]
                 
                 rx.text(
                     "Every great machine learning project begins with data. For gold price prediction, "
-                    "we needed more than just historical gold prices—we needed a comprehensive view of "
+                    "we needed more than just historical gold prices, we needed a comprehensive view of "
                     "the economic landscape. We collected 17 features spanning 20+ years (2000-2025) "
                     "from four major categories: Precious Metals, Financial Markets, Macroeconomics, "
                     "and Geopolitical Risk. This rich dataset forms the foundation of our analysis.",
@@ -518,63 +431,6 @@ close_vix = vix["Close"]
                     width="100%",
                     margin_bottom="1.5em"
                 ),
-                
-                section_divider(),
-                
-                rx.heading(
-                    "Data Collection Process",
-                    size="7",
-                    weight="bold",
-                    margin_bottom="1.5em"
-                ),
-                
-                step_header(
-                    1, 
-                    "Fetch Market Data (Daily)",
-                    "Using the yfinance API, we downloaded daily Close prices for all market-driven features including gold, silver, oil, and major stock indices."
-                ),
-                rx.code_block(
-                    code_yfinance,
-                    language="python",
-                    show_line_numbers=True,
-                    theme="dark",
-                    can_copy=True,
-                    copy_button_margin="0.5em"
-                ),
-
-                # code_snippet(code_yfinance),
-                
-                step_header(
-                    2, 
-                    "Fetch Macroeconomic Data (Monthly)",
-                    "Using the FRED API, we retrieved all monthly macroeconomic indicators from the Federal Reserve Economic Data database, including inflation, interest rates, and money supply."
-                ),
-
-                rx.code_block(
-                    code_fred,
-                    language="python",
-                    show_line_numbers=True,
-                    theme="dark",
-                    can_copy=True,
-                    copy_button_margin="0.5em"
-                ),
-                # code_snippet(code_fred),
-                
-                step_header(
-                    3, 
-                    "Fetch VIX Data (Daily)",
-                    "The VIX (Volatility Index) measures market fear and uncertainty. We downloaded daily VIX data using yfinance to capture market sentiment."
-                ),
-
-                rx.code_block(
-                    code_vix,
-                    language="python",
-                    show_line_numbers=True,
-                    theme="dark",
-                    can_copy=True,
-                    copy_button_margin="0.5em"
-                ),
-                # code_snippet(code_vix),
                 
                 section_divider(),
 

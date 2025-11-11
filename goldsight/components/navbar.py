@@ -48,8 +48,14 @@ def navbar() -> rx.Component:
         rx.container(
             rx.hstack(
                 # Logo
+                rx.image(
+                        src="/Gold_Ingot.png",
+                        width="40px",
+                        height="40px",
+                        alt="GoldSight Logo"
+                ),
                 rx.heading(
-                    "🔱 GoldSight",
+                    "GoldSight",
                     size="7",
                     color_scheme="amber",
                     weight="bold"

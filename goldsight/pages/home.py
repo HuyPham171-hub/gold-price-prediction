@@ -92,12 +92,24 @@ def home_page() -> rx.Component:
             rx.vstack(
                 # --- Hero Section ---
                 rx.vstack(
-                    rx.heading(
-                        "🔱 GoldSight",
-                        size=Typography.HERO,  # size="9"
-                        weight="bold",
-                        color_scheme=Colors.PRIMARY  # Amber
+                    # Logo + Title (horizontal)
+                    rx.hstack(
+                        rx.image(
+                            src="/Gold_Ingot.png",
+                            width="64px",
+                            height="64px",
+                            alt="GoldSight Logo"
+                        ),    
+                        rx.heading(
+                            "GoldSight",
+                            size=Typography.HERO,  # size="9"
+                            weight="bold",
+                            color_scheme=Colors.PRIMARY  # Amber
+                        ),
+                        spacing="3",
+                        align="center"
                     ),
+                    # Subtitle
                     rx.heading(
                         "An AI-Powered Gold Price Prediction Journey",
                         size=Typography.SECTION,  # size="6" (not "7" - follow hierarchy)
