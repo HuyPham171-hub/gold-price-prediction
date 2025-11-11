@@ -116,48 +116,6 @@ def insight_card(title: str, description: str, icon: str = "lightbulb") -> rx.Co
         margin_bottom="1em"
     )
 
-
-def plotly_placeholder(title: str, description: str, chart_type: str = "3D") -> rx.Component:
-    """Placeholder for Plotly charts to be implemented."""
-    return rx.box(
-        rx.vstack(
-            rx.hstack(
-                rx.icon("bar-chart-3", size=20, color=rx.color("amber", 9)),
-                rx.heading(title, size="5", weight="bold"),
-                spacing="2",
-                align="center"
-            ),
-            rx.text(description, size="3", color="black"),
-            rx.badge(f"{chart_type} Visualization", color_scheme="amber", size="2"),
-            rx.box(
-                rx.text(
-                    "Interactive Plotly chart will be rendered here",
-                    size="2",
-                    color="var(--gray-9)",
-                    text_align="center"
-                ),
-                width="100%",
-                height="400px",
-                display="flex",
-                align_items="center",
-                justify_content="center",
-                background=rx.color("gray", 2),
-                border=f"2px dashed {rx.color('gray', 5)}",
-                border_radius="var(--radius-3)"
-            ),
-            spacing="3",
-            align="start",
-            width="100%"
-        ),
-        padding="1.5em",
-        border="1px solid",
-        border_color=rx.color("gray", 5),
-        border_radius="var(--radius-4)",
-        background_color=rx.color("gray", 1),
-        margin_bottom="2em"
-    )
-
-
 # ======================================================================
 # MAIN PAGE SECTIONS
 # ======================================================================
@@ -192,7 +150,7 @@ def executive_summary() -> rx.Component:
                 rx.text(
                     "In this chapter, we'll explore 17 features across 19.5 years (2006-2025) to understand "
                     "the economic forces that drive gold prices. Through correlation analysis, distribution studies, "
-                    "and interactive 3D visualizations, we'll identify the 13 most predictive features for our models.",
+                    "and interactive visualizations, we'll identify the 13 most predictive features for our models.",
                     size="3",
                     color="black",
                     margin_top="1em",
@@ -688,7 +646,7 @@ def gold_spot_currency_analysis() -> rx.Component:
         rx.box(
             rx.vstack(
                 rx.hstack(
-                    rx.icon("bar-chart-3", size=20, color=rx.color("amber", 9)),
+                    rx.icon("chart-bar", size=20, color=rx.color("amber", 9)),
                     rx.heading("Gold Price Correlation Heatmap (All Currencies & Products)", size="5", weight="bold"),
                     spacing="2",
                     align="center"
@@ -964,7 +922,7 @@ def correlation_analysis_section() -> rx.Component:
         rx.box(
             rx.vstack(
                 rx.hstack(
-                    rx.icon("bar-chart-3", size=20, color=rx.color("blue", 9)),
+                    rx.icon("chart-bar", size=20, color=rx.color("blue", 9)),
                     rx.heading("Full Feature Correlation Heatmap", size="5", weight="bold"),
                     spacing="2",
                     align="center"
@@ -1060,179 +1018,6 @@ def correlation_analysis_section() -> rx.Component:
         spacing="3",
         align="start",
         width="100%"
-    )
-    
-    # 3D Network Graph section
-    network_3d_content = rx.vstack(
-        rx.heading("3D Feature Correlation Network", size="7", weight="bold", margin_bottom="1em"),
-        
-        rx.text(
-            "Before deciding which features to keep, we need to understand how all 17 original features relate to each other. "
-            "This network visualization maps correlations in 3D space—features that move together cluster closely, "
-            "while independent features stand apart. Lines connect features with correlation above 0.3, "
-            "revealing natural groupings and redundancies.",
-            size="4",
-            color="var(--gray-12)",
-            line_height="1.7",
-            margin_bottom="1.5em"
-        ),
-        
-        rx.box(
-            rx.vstack(
-                rx.heading("Reading the Network", size="5", weight="bold", margin_bottom="1em"),
-                
-                rx.accordion.root(
-                    rx.accordion.item(
-                        header="Node Size = Volatility",
-                        content=rx.text(
-                            "Larger circles indicate features with higher variance, meaning they changed more dramatically "
-                            "over our 19.5-year period. Gold prices, stock indices, and crude oil typically show larger nodes "
-                            "due to their significant price swings during economic crises and booms.",
-                            size="3",
-                            line_height="1.7",
-                            color="var(--gray-12)"
-                        )
-                    ),
-                    rx.accordion.item(
-                        header="Position = Similarity",
-                        content=rx.text(
-                            "The algorithm pulls correlated features together like magnets. "
-                            "Tight clusters mean these features tell similar stories. For example, CPI and M2 Money Supply "
-                            "sit close together because both reflect inflationary pressures. We only need one of them.",
-                            size="3",
-                            line_height="1.7",
-                            color="var(--gray-12)"
-                        )
-                    ),
-                    rx.accordion.item(
-                        header="Green Lines = Moving Together",
-                        content=rx.text(
-                            "Green connections show positive correlations—when one feature rises, so does the other. "
-                            "Thicker lines mean stronger relationships. A thick green line between S&P 500 and NASDAQ "
-                            "(r = 0.99) visually confirms they're nearly identical.",
-                            size="3",
-                            line_height="1.7",
-                            color="var(--gray-12)"
-                        )
-                    ),
-                    rx.accordion.item(
-                        header="Red Lines = Opposing Forces",
-                        content=rx.text(
-                            "Red connections indicate inverse relationships. When real interest rates rise, gold prices tend to fall "
-                            "(opportunity cost). This economic principle appears as red lines between interest rate features and gold.",
-                            size="3",
-                            line_height="1.7",
-                            color="var(--gray-12)"
-                        )
-                    ),
-                    collapsible=True,
-                    variant="soft",
-                    width="100%",
-                    margin_bottom="1.5em"
-                ),
-                
-                rx.box(
-                    rx.vstack(
-                        rx.hstack(
-                            rx.icon("lightbulb", size=28, color=rx.color("amber", 10)),
-                            rx.heading("What This Tells Us", size="5", weight="bold", color=rx.color("amber", 11)),
-                            spacing="3",
-                            align="center",
-                            margin_bottom="0.75em"
-                        ),
-                        rx.text(
-                            "By examining this network, we identified ",
-                            rx.text.strong("4 features to remove", color=rx.color("red", 10), size="4"),
-                            " due to redundancy: ",
-                            rx.text.strong("NASDAQ ", color=rx.color("blue", 10)),
-                            "(too similar to S&P 500), ",
-                            rx.text.strong("M2 Supply ", color=rx.color("blue", 10)),
-                            "(duplicates CPI information), ",
-                            rx.text.strong("GPRT ", color=rx.color("blue", 10)),
-                            "(subset of GPR coverage), and ",
-                            rx.text.strong("Gold Futures ", color=rx.color("blue", 10)),
-                            "(nearly identical to Gold Spot). "
-                            "The network also reveals ",
-                            rx.text.strong("VIX as an isolated node", color=rx.color("green", 10)),
-                            "—it measures market fear independently of other indicators, "
-                            "making it worth keeping despite low gold correlation.",
-                            size="3",
-                            color="var(--gray-12)",
-                            line_height="1.8"
-                        ),
-                        spacing="3",
-                        align="start"
-                    ),
-                    padding="1.5em",
-                    background=rx.color("amber", 2),
-                    border=f"2px solid {rx.color('amber', 7)}",
-                    border_radius="var(--radius-4)",
-                    margin_top="1em",
-                    box_shadow="0 2px 8px rgba(0, 0, 0, 0.08)"
-                ),
-                
-                spacing="3",
-                align="start"
-            ),
-            padding="1.5em",
-            background=rx.color("gray", 1),
-            border="1px solid",
-            border_color=rx.color("gray", 5),
-            border_radius="var(--radius-4)",
-            margin_bottom="1.5em"
-        ),
-        
-        spacing="3",
-        align="start",
-        width="100%",
-        margin_bottom="1em"
-    )
-    
-    network_3d_chart_box = rx.box(
-        rx.box(
-            rx.vstack(
-                rx.heading("Interactive 3D Network: All 17 Features", size="5", weight="bold", margin_bottom="0.5em"),
-                rx.text(
-                    "Rotate to explore | Node size = variance | Line thickness = correlation strength | Green = positive | Red = negative",
-                    size="3",
-                    color="black",
-                    margin_bottom="1em"
-                ),
-                rx.plotly(data=load_plotly_chart("correlation_network_3d"), width="1200px"),
-                spacing="3",
-                align="start",
-                width="100%"
-            ),
-            padding="1.5em",
-            border="1px solid",
-            border_color=rx.color("gray", 5),
-            border_radius="var(--radius-4)",
-            background_color=rx.color("gray", 1),
-        ),
-        display="flex",
-        justify_content="center",
-        width="100%",
-        margin_bottom="2em"
-    )
-    
-    network_3d_section = rx.vstack(
-        network_3d_content,
-        network_3d_chart_box,
-        spacing="0",
-        align="start",
-        width="100%",
-        margin_bottom="2em"
-    )
-    
-    return rx.vstack(
-        content_vstack,
-        chart_box,
-        additional_content,
-        network_3d_section,
-        spacing="0",
-        align="start",
-        width="100%",
-        margin_bottom="2em"
     )
 
 
@@ -1388,158 +1173,11 @@ def feature_selection_section() -> rx.Component:
             margin_bottom="1.5em"
         ),
         
-        # 3D PCA Visualization
-        rx.vstack(
-            rx.heading("3D PCA: Feature Clustering Analysis", size="6", weight="bold", margin_bottom="1em"),
-            
-            rx.text(
-                "After removing 4 redundant features, we're left with 13 carefully selected variables. But do they truly capture different aspects "
-                "of the economy, or is there still hidden overlap? Principal Component Analysis (PCA) reduces our 13 features into 3 visual dimensions, "
-                "revealing which features cluster together and which stand alone - a final validation of our selection strategy.",
-                size="4",
-                color="var(--gray-12)",
-                line_height="1.7",
-                margin_bottom="1.5em"
-            ),
-            
-            rx.box(
-                rx.vstack(
-                    rx.heading("Understanding the Visualization", size="5", weight="bold", margin_bottom="1em"),
-                    
-                    rx.accordion.root(
-                        rx.accordion.item(
-                            header="Axes: Principal Components",
-                            content=rx.text(
-                                "PCA creates new coordinate axes that capture maximum variance. PC1 (horizontal) explains the most variation—"
-                                "often the 'inflation trend' where CPI, M2, and gold move together. PC2 and PC3 capture secondary patterns like "
-                                "'risk-on vs risk-off' dynamics. Together, these 3 axes typically retain 80-90% of the original information.",
-                                size="3",
-                                line_height="1.7",
-                                color="var(--gray-12)"
-                            )
-                        ),
-                        rx.accordion.item(
-                            header="Colors: Economic Categories",
-                            content=rx.text(
-                                "Gold (target) in yellow, Market indicators (S&P 500, USD, Oil, Silver) in blue, "
-                                "Macroeconomic factors (CPI, rates, unemployment) in green, and Volatility measures (VIX, GPR) in red. "
-                                "If features of the same color cluster together, it confirms our categorization makes economic sense.",
-                                size="3",
-                                line_height="1.7",
-                                color="var(--gray-12)"
-                            )
-                        ),
-                        rx.accordion.item(
-                            header="Size: Feature Importance",
-                            content=rx.text(
-                                "Larger points contribute more to PC1 (the main trend). Big circles like CPI, Gold, and S&P 500 are 'core drivers' "
-                                "of economic variation. Smaller points like GPR or unemployment play more specialized roles, "
-                                "important for capturing specific events but not central to the overall trend.",
-                                size="3",
-                                line_height="1.7",
-                                color="var(--gray-12)"
-                            )
-                        ),
-                        rx.accordion.item(
-                            header="Distance: Independence",
-                            content=rx.text(
-                                "Points close together behave similarly over time—they're nearly interchangeable. Points far apart capture unique information. "
-                                "For instance, if VIX sits isolated in one corner, it confirms that market fear operates independently from inflation or growth trends, "
-                                "making it a valuable diversification tool despite low gold correlation.",
-                                size="3",
-                                line_height="1.7",
-                                color="var(--gray-12)"
-                            )
-                        ),
-                        collapsible=True,
-                        variant="soft",
-                        width="100%",
-                        margin_bottom="1.5em"
-                    ),
-                    
-                    rx.box(
-                        rx.vstack(
-                            rx.hstack(
-                                rx.icon("lightbulb", size=28, color=rx.color("blue", 10)),
-                                rx.heading("What This Confirms", size="5", weight="bold", color=rx.color("blue", 11)),
-                                spacing="3",
-                                align="center",
-                                margin_bottom="0.75em"
-                            ),
-                            rx.text(
-                                "This visualization validates our earlier decisions. The ",
-                                rx.text.strong("13 remaining features", color=rx.color("green", 10), size="4"),
-                                " spread across the 3D space with minimal overlap—",
-                                rx.text.strong("each brings unique information", color=rx.color("blue", 10)),
-                                ". Market indicators form one region, macro variables another, "
-                                "and volatility measures stand apart. If we still saw tight clustering (like two points on top of each other), "
-                                "it would suggest further reduction is needed. Instead, the ",
-                                rx.text.strong("even distribution confirms", color=rx.color("green", 10)),
-                                " we've achieved a ",
-                                rx.text.strong("balanced, non-redundant feature set", color=rx.color("amber", 10)),
-                                " ready for modeling.",
-                                size="3",
-                                color="var(--gray-12)",
-                                line_height="1.8"
-                            ),
-                            spacing="3",
-                            align="start"
-                        ),
-                        padding="1.5em",
-                        background=rx.color("blue", 2),
-                        border=f"2px solid {rx.color('blue', 7)}",
-                        border_radius="var(--radius-4)",
-                        margin_top="1em",
-                        box_shadow="0 2px 8px rgba(0, 0, 0, 0.08)"
-                    ),
-                    
-                    spacing="3",
-                    align="start"
-                ),
-                padding="1.5em",
-                background=rx.color("gray", 1),
-                border="1px solid",
-                border_color=rx.color("gray", 5),
-                border_radius="var(--radius-4)",
-                margin_bottom="1.5em"
-            ),
-            
-            spacing="3",
-            align="start",
-            width="100%"
-        ),
-        
-        rx.box(
-            rx.box(
-                rx.vstack(
-                    rx.heading("Interactive 3D PCA: Final 13 Features", size="5", weight="bold", margin_bottom="0.5em"),
-                    rx.text(
-                        "Rotate to explore | Colors = categories | Size = PC1 contribution | Reference axes show origin",
-                        size="3",
-                        color="black",
-                        margin_bottom="1em"
-                    ),
-                    rx.plotly(data=load_plotly_chart("feature_pca_3d"), width="1200px"),
-                    spacing="3",
-                    align="start",
-                    width="100%"
-                ),
-                padding="1.5em",
-                border="1px solid",
-                border_color=rx.color("gray", 5),
-                border_radius="var(--radius-4)",
-                background_color=rx.color("gray", 1),
-            ),
-            display="flex",
-            justify_content="center",
-            width="100%",
-            margin_bottom="1.5em"
-        ),
         
         rx.box(
             rx.vstack(
                 rx.hstack(
-                    rx.icon("check-circle", size=28, color=rx.color("green", 10)),
+                    rx.icon("circle-check", size=28, color=rx.color("green", 10)),
                     rx.heading("Final 13 Features Selected", size="5", weight="bold", color=rx.color("green", 11)),
                     spacing="3",
                     align="center",
@@ -1719,7 +1357,7 @@ def feature_selection_section() -> rx.Component:
                     rx.box(
                         rx.vstack(
                             rx.hstack(
-                                rx.icon("bar-chart-2", size=20, color=rx.color("green", 10)),
+                                rx.icon("chart-bar", size=20, color=rx.color("green", 10)),
                                 rx.heading("Macroeconomic", size="4", weight="bold", color=rx.color("green", 11)),
                                 spacing="2",
                                 align="center"
@@ -1811,7 +1449,7 @@ def feature_selection_section() -> rx.Component:
                     rx.box(
                         rx.vstack(
                             rx.hstack(
-                                rx.icon("alert-triangle", size=20, color=rx.color("red", 10)),
+                                rx.icon("triangle-alert", size=20, color=rx.color("red", 10)),
                                 rx.heading("Geopolitical Risk", size="4", weight="bold", color=rx.color("red", 11)),
                                 spacing="2",
                                 align="center"

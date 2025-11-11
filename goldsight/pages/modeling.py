@@ -477,7 +477,7 @@ def traditional_ml() -> rx.Component:
         ),
         
         insight_box(
-            "alert-circle",
+            "circle-alert",
             "XGBoost Surprise: Why Did It Underperform?",
             "XGBoost (R²=0.973) surprisingly performed worse than SVR and Random Forest. This suggests the model may be overfitting "
             "to training data despite regularization. XGBoost's strength lies in tabular data with complex interactions, but our "
