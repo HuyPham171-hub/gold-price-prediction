@@ -195,11 +195,16 @@ def data_collection_page() -> rx.Component:
                 ),
                 
                 rx.text(
-                    "Every great machine learning project begins with data. For gold price prediction, "
+                    "Every machine learning project begins with data. For gold price prediction, "
                     "we needed more than just historical gold prices, we needed a comprehensive view of "
                     "the economic landscape. We collected 17 features spanning 20+ years (2000-2025) "
-                    "from four major categories: Precious Metals, Financial Markets, Macroeconomics, "
-                    "and Geopolitical Risk. This rich dataset forms the foundation of our analysis.",
+                    "from four major categories:", 
+                    rx.text.strong(" Precious Metals, "),
+                    rx.text.strong("Financial Markets, "),
+                    rx.text.strong("Macroeconomics "),
+                    "and",
+                    rx.text.strong(" Geopolitical Risk"),
+                    ". This rich dataset forms the foundation of our analysis.",
                     size="4",
                     color="var(--gray-12)",
                     text_align="left",
@@ -364,19 +369,19 @@ def data_collection_page() -> rx.Component:
                 rx.box(
                     rx.vstack(
                         rx.heading(
-                            "💡 Why These Categories?",
+                            "Why These Categories?",
                             size="6",
                             weight="bold",
                             color_scheme="blue",
                             margin_bottom="0.5em"
                         ),
                         rx.text(
-                            "Gold prices don't exist in isolation—they are shaped by a complex interplay of economic, financial, and geopolitical forces. "
+                            "Gold prices don't exist in isolation, they are shaped by a complex interplay of economic, financial, and geopolitical forces. "
                             "Our feature selection is grounded in economic theory and empirical research. ",
                             rx.text.strong("Inflation "),
                             "(measured through CPI and Real Interest Rates) directly affects gold's role as a store of value. When inflation rises, investors flock to gold to preserve purchasing power. ",
                             rx.text.strong("Market Sentiment "),
-                            "(captured by stock indices, VIX, and commodity prices) reflects investor risk appetite—during 'risk-on' periods, capital flows to equities; during 'risk-off' periods, it shifts to safe havens like gold. ",
+                            "(captured by stock indices, VIX, and commodity prices) reflects investor risk appetite during 'risk-on' periods, capital flows to equities; during 'risk-off' periods, it shifts to safe havens like gold. ",
                             rx.text.strong("Monetary Policy "),
                             "(Federal Funds Rate, M2 Money Supply, and Treasury Yields) influences the opportunity cost of holding non-yielding assets like gold. Finally, ",
                             rx.text.strong("Geopolitical Risk "),

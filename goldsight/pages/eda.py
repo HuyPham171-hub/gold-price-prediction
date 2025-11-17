@@ -99,7 +99,7 @@ def insight_card(title: str, description: str, icon: str = "lightbulb") -> rx.Co
     """Display an insight card with icon and description."""
     return rx.box(
         rx.hstack(
-            rx.icon(icon, size=24, color=rx.color("blue", 9)),
+            rx.icon(icon, size=48, color=rx.color("blue", 9)),
             rx.vstack(
                 rx.heading(title, size="4", weight="bold"),
                 rx.text(description, size="3", color="var(--gray-12)", line_height="1.7"),
@@ -131,19 +131,19 @@ def executive_summary() -> rx.Component:
                 rx.unordered_list(
                     rx.list_item(
                         rx.text.strong("Strong Inflation Link: "),
-                        "CPI explains 72% of gold price variance (r=0.85) – confirming gold's role as inflation hedge"
+                        "CPI explains 75% of gold price variance (r=0.87) – confirming gold's role as inflation hedge"
                     ),
                     rx.list_item(
                         rx.text.strong("Inverse Rate Relationship: "),
-                        "Higher real interest rates lead to lower gold prices (r=-0.40) due to opportunity cost"
+                        "Higher real interest rates lead to lower gold prices (r=-0.26) due to opportunity cost"
                     ),
                     rx.list_item(
                         rx.text.strong("Equity Market Surprise: "),
-                        "Gold and S&P 500 move together (r=0.80), challenging the 'safe haven' narrative"
+                        "Gold and S&P 500 move together (r=0.82), challenging the 'safe haven' narrative"
                     ),
                     rx.list_item(
                         rx.text.strong("VIX Paradox: "),
-                        "Market volatility shows NO correlation with gold (r=0.00) – unexpected finding!"
+                        "Market volatility shows NO correlation with gold (r≈0.00) – unexpected finding!"
                     ),
                     spacing="2",
                     padding_left="1.5em"
@@ -151,7 +151,7 @@ def executive_summary() -> rx.Component:
                 rx.text(
                     "In this chapter, we'll explore 17 features across 19.5 years (2006-2025) to understand "
                     "the economic forces that drive gold prices. Through correlation analysis, distribution studies, "
-                    "and interactive 3D visualizations, we'll identify the 13 most predictive features for our models.",
+                    "and interactive visualizations, we'll identify the 13 most predictive features for our models.",
                     size="3",
                     color="var(--gray-12)",
                     margin_top="1em",
@@ -657,7 +657,7 @@ def gold_spot_currency_analysis() -> rx.Component:
                     size="3",
                     color="var(--gray-12)"
                 ),
-                rx.plotly(data=load_plotly_chart("gold_currency_heatmap"), width="900px"),
+                rx.plotly(data=load_plotly_chart("gold_currency_heatmap"), width="1000px"),
                 spacing="3",
                 align="start",
                 width="100%"
@@ -1303,7 +1303,7 @@ def feature_selection_section() -> rx.Component:
         rx.box(
             rx.vstack(
                 rx.hstack(
-                    rx.icon("check-circle", size=28, color=rx.color("green", 10)),
+                    rx.icon("circle-check", size=28, color=rx.color("green", 10)),
                     rx.heading("Final 13 Features Selected", size="5", weight="bold", color=rx.color("green", 11)),
                     spacing="3",
                     align="center",
@@ -1575,7 +1575,7 @@ def feature_selection_section() -> rx.Component:
                     rx.box(
                         rx.vstack(
                             rx.hstack(
-                                rx.icon("alert-triangle", size=20, color=rx.color("red", 10)),
+                                rx.icon("triangle-alert", size=20, color=rx.color("red", 10)),
                                 rx.heading("Geopolitical Risk", size="4", weight="bold", color=rx.color("red", 11)),
                                 spacing="2",
                                 align="center"
@@ -1659,7 +1659,7 @@ def key_insights_section() -> rx.Component:
             rx.accordion.item(
                 header="1. Inflation is the Dominant Driver",
                 content=rx.text(
-                    "CPI shows the strongest correlation (0.85) with gold prices, confirming gold's historical role "
+                    "CPI shows the strongest correlation (0.87) with gold prices, confirming gold's historical role "
                     "as an inflation hedge. When purchasing power declines, investors flock to gold to preserve wealth. "
                     "This relationship has remained consistent across different economic regimes.",
                     size="3",
@@ -1669,9 +1669,9 @@ def key_insights_section() -> rx.Component:
             rx.accordion.item(
                 header="2. Interest Rates Create Opportunity Cost",
                 content=rx.text(
-                    "Real interest rates show a negative correlation (-0.40) with gold. When rates are high, "
+                    "Real interest rates show a negative correlation (-0.26) with gold. When rates are high, "
                     "interest-bearing assets like bonds become more attractive, reducing demand for non-yielding gold. "
-                    "Negative real rates (inflation > interest rate) create the perfect environment for gold bull markets.",
+                    "Negative real rates (inflation > interest rate) create favorable conditions for gold.",
                     size="3",
                     line_height="1.7"
                 )
@@ -1679,7 +1679,7 @@ def key_insights_section() -> rx.Component:
             rx.accordion.item(
                 header="3. Gold-Equity Correlation Challenges Conventional Wisdom",
                 content=rx.text(
-                    "Surprisingly, gold and S&P 500 show strong positive correlation (0.80), contradicting the "
+                    "Surprisingly, gold and S&P 500 show strong positive correlation (0.82), contradicting the "
                     "'safe haven' narrative. This suggests both assets benefit from liquidity injections and monetary easing. "
                     "Gold may not be the portfolio diversifier many believe it to be in modern markets.",
                     size="3",
@@ -1687,9 +1687,9 @@ def key_insights_section() -> rx.Component:
                 )
             ),
             rx.accordion.item(
-                header="4. VIX Shows Zero Correlation – A Puzzle",
+                header="4. VIX Shows Near-Zero Correlation – A Puzzle",
                 content=rx.text(
-                    "The VIX (fear index) has essentially zero correlation (0.00) with gold prices. This is unexpected, "
+                    "The VIX (fear index) has essentially zero correlation (r≈0.00) with gold prices. This is unexpected, "
                     "as conventional wisdom suggests gold should rally during high volatility periods. This finding suggests "
                     "market fear and gold demand are driven by different mechanisms than commonly assumed.",
                     size="3",
@@ -1768,7 +1768,6 @@ def eda_page() -> rx.Component:
                 section_divider(),
                 
                 correlation_analysis_section(),
-                section_divider(),
                 
                 feature_selection_section(),
                 section_divider(),

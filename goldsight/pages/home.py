@@ -37,7 +37,7 @@ def nav_card(
                     title,
                     size=Typography.SUBSECTION,  # Use design system
                     weight="bold",
-                    color_scheme=Colors.NEUTRAL
+                    color="var(--gray-12)"
                 ),
                 
                 # Description
@@ -137,7 +137,7 @@ def home_page() -> rx.Component:
                         "Traditional forecasting methods often fail to capture the complex market dynamics, "
                         "making Machine Learning an ideal approach.",
                         text_align="justify", 
-                        color_scheme=Colors.NEUTRAL,
+                        color="var(--gray-12)",
                         size=Typography.BODY,  # size="4"
                         line_height="1.7"
                     ),
@@ -161,7 +161,7 @@ def home_page() -> rx.Component:
                         "This interactive platform visualizes trends and provides forecasts, "
                         "allowing users to analyze price models and make informed decisions.",
                         text_align="justify",
-                        color_scheme=Colors.NEUTRAL,
+                        color="var(--gray-12)",
                         size=Typography.BODY,  # size="4"
                         line_height="1.7"
                     ),
@@ -182,7 +182,7 @@ def home_page() -> rx.Component:
                     rx.text(
                         "Follow our step-by-step process, from data to deployment.",
                         size=Typography.BODY,
-                        color_scheme=Colors.NEUTRAL,
+                        color="var(--gray-12)",
                         align="center"
                     ),
                     
@@ -205,21 +205,14 @@ def home_page() -> rx.Component:
                             ),
                             nav_card(
                                 title="Chapter 3: The Models",
-                                desc="Our journey comparing 8 models, from ARIMA to LSTM.",
+                                desc="Our journey comparing 1 models, from ARIMA to LSTM.",
                                 route="/modeling",
                                 icon_name="cpu",
                                 icon_color=Colors.SECONDARY  # Blue
                             ),
                             nav_card(
-                                title="Chapter 4: The Results",
-                                desc="Analyze model performance, error, and key findings.",
-                                route="/insights",
-                                icon_name="pie-chart",
-                                icon_color="purple"
-                            ),
-                            nav_card(
                                 title="Final App: The Forecast Tool",
-                                desc="Try our best-performing LSTM model to get live forecasts.",
+                                desc="Try our best-performing model to get live forecasts.",
                                 route="/forecast",
                                 icon_name="trending-up",
                                 icon_color=Colors.SUCCESS  # Green
