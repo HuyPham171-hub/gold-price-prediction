@@ -222,9 +222,15 @@ def modeling_philosophy() -> rx.Component:
         rx.heading("Modeling Philosophy: Start Simple, Add Complexity", size="7", weight="bold", margin_bottom="1em"),
         
         rx.text(
-            "Rather than jumping straight to complex solutions, we follow a systematic approach: "
-            "start with simple baselines, understand their limitations, then progressively add complexity. "
-            "This ensures we understand what each model contributes and avoid unnecessary sophistication.",
+            "Rather than jumping straight to complex solutions, we follow a ",
+            rx.text.strong("systematic approach"),
+            ": start with ",
+            rx.text.strong("simple baselines"),
+            ", understand their limitations, then ",
+            rx.text.strong("progressively add complexity"),
+            ". This ensures we understand what each model contributes and ",
+            rx.text.strong("avoid unnecessary sophistication"),
+            ".",
             size="4",
             color="var(--gray-12)",
             line_height="1.7",
@@ -711,7 +717,10 @@ def multivariate_regression_detail() -> rx.Component:
         
         rx.text(
             "Now we use all 13 features simultaneously. This allows the model to capture interactions between variables "
-            "(e.g., inflation + interest rates together affecting gold). Results: R² = 0.947, RMSE = $115.88, MAE = $77.06.",
+            "(e.g., inflation and interest rates together affecting gold). Results: ",
+            rx.text.strong("R² = 0.947"), ", ",
+            rx.text.strong("RMSE = $115.88"), ", ",
+            rx.text.strong("MAE = $77.06"), ".",
             size="4",
             color="var(--gray-12)",
             line_height="1.7",
@@ -1006,19 +1015,34 @@ def multivariate_regression_detail() -> rx.Component:
                             rx.unordered_list(
                                 rx.list_item(
                                     rx.text.strong("Strong overall fit: "),
-                                    "F-statistic = 312.9 confirms the model explains variance significantly better than the null model"
+                                    "F-statistic = ",
+                                    rx.text.strong("312.9"),
+                                    " confirms the model explains variance ",
+                                    rx.text.strong("significantly better than the null model")
                                 ),
                                 rx.list_item(
                                     rx.text.strong("No autocorrelation: "),
-                                    "Durbin-Watson = 2.221 ~ 2.0 means residuals are independent (good for regression assumptions)"
+                                    "Durbin-Watson = ",
+                                    rx.text.strong("2.221 ~ 2.0"),
+                                    " means ",
+                                    rx.text.strong("residuals are independent"),
+                                    " (good for regression assumptions)"
                                 ),
                                 rx.list_item(
                                     rx.text.strong("Non-normal residuals: "),
-                                    "Skew = 0.928, Kurtosis = 10.38 indicate heavy-tailed distribution. This affects t-test/F-test reliability."
+                                    "Skew = ",
+                                    rx.text.strong("0.928"),
+                                    ", Kurtosis = ",
+                                    rx.text.strong("10.38"),
+                                    " indicate ",
+                                    rx.text.strong("heavy-tailed distribution"),
+                                    ". This affects t-test/F-test reliability."
                                 ),
                                 rx.list_item(
                                     rx.text.strong("Multicollinearity present: "),
-                                    "Condition number = 99,000 suggests some features are highly correlated (e.g., CPI <-> M2, S&P <-> NASDAQ removed earlier)"
+                                    "Condition number = ",
+                                    rx.text.strong("99,000"),
+                                    " suggests some features are highly correlated (e.g., CPI <-> M2, S&P <-> NASDAQ removed earlier)"
                                 ),
                                 rx.list_item(
                                     rx.text.strong("Solution: "),
@@ -1168,7 +1192,9 @@ def multivariate_regression_detail() -> rx.Component:
                                 ),
                                 rx.list_item(
                                     rx.text.strong("Ridge regression test: "),
-                                    "Applied L2 regularization showed no improvement (R² = 0.947 identical to OLS), indicating that while multicollinearity exists, it does not significantly degrade predictive performance"
+                                    "Applied L2 regularization showed no improvement (",
+                                    rx.text.strong("R² = 0.947"),
+                                    " identical to OLS), indicating that while multicollinearity exists, it does not significantly degrade predictive performance"
                                 ),
                                 rx.list_item(
                                     rx.text.strong("Modeling decision: "),
@@ -1224,8 +1250,16 @@ def polynomial_regression_section() -> rx.Component:
             rx.vstack(
                 rx.heading("Best Result: Silver (R² = 0.537)", size="5", weight="bold", margin_bottom="0.75em", color=rx.color("green", 10)),
                 rx.text(
-                    "Polynomial regression on Silver Futures achieves R²=0.537 vs linear R²=0.526 - a marginal 1% improvement. "
-                    "CPI polynomial performs worse (R²=0.698 vs linear 0.720). Most features show no benefit from polynomial transformation.",
+                    "Polynomial regression on Silver Futures achieves ",
+                    rx.text.strong("R² = 0.537"),
+                    " versus linear ",
+                    rx.text.strong("R² = 0.526"),
+                    " - a marginal 1% improvement. "
+                    "CPI polynomial performs worse (",
+                    rx.text.strong("R² = 0.698"),
+                    " versus linear ",
+                    rx.text.strong("0.720"),
+                    "). Most features show no benefit from polynomial transformation.",
                     size="3",
                     color="var(--gray-12)",
                     line_height="1.7",
@@ -1233,8 +1267,12 @@ def polynomial_regression_section() -> rx.Component:
                 ),
                 rx.heading("Verdict: Curves Don't Help", size="5", weight="bold", margin_bottom="0.5em"),
                 rx.text(
-                    "Gold-feature relationships are approximately linear. Adding polynomial terms creates overfitting risk "
-                    "without meaningful performance gain. Multivariate linear models remain the better path.",
+                    rx.text.strong("Gold-feature relationships are approximately linear"),
+                    ". Adding polynomial terms creates ",
+                    rx.text.strong("overfitting risk"),
+                    " without meaningful performance gain. ",
+                    rx.text.strong("Multivariate linear models remain the better path"),
+                    ".",
                     size="3",
                     color="var(--gray-12)",
                     line_height="1.7"
@@ -1257,28 +1295,138 @@ def polynomial_regression_section() -> rx.Component:
 
 
 def time_series_section() -> rx.Component:
-    """ARIMA/SARIMA - brief section."""
+    """ARIMA/SARIMA with detailed parameter explanations."""
     return rx.vstack(
-        rx.heading("Time Series Models: ARIMA & SARIMA", size="6", weight="bold", margin_bottom="1em"),
+        rx.heading("Time Series Models: ARIMA and SARIMA", size="6", weight="bold", margin_bottom="1em"),
         
         rx.text(
-            "Can we predict gold prices using only historical patterns (autoregressive models)? "
-            "We tested ARIMA (1,1,1) and SARIMA (1,1,1)x(1,1,1,12) with monthly seasonality.",
+            "Can we predict gold prices using only historical patterns without external economic data? "
+            "We tested traditional time series models (ARIMA and SARIMA) that rely solely on past gold price values and their temporal structure.",
             size="4",
             color="var(--gray-12)",
             line_height="1.7",
-            margin_bottom="1em"
+            margin_bottom="1.5em"
         ),
         
+        # Explanation of ARIMA/SARIMA parameters
+        rx.box(
+            rx.vstack(
+                rx.heading("Understanding ARIMA and SARIMA Parameters", size="5", weight="bold", margin_bottom="1em"),
+                
+                rx.heading("ARIMA (p, d, q): AutoRegressive Integrated Moving Average", size="4", weight="bold", margin_bottom="0.75em", color=rx.color("blue", 10)),
+                rx.grid(
+                    rx.vstack(
+                        rx.text.strong("p (AutoRegressive order)"),
+                        rx.text(
+                            "Number of past time steps (lags) used to predict the current value. "
+                            "For ARIMA(1,1,1), p=1 means the model uses the previous month's price to predict the next month.",
+                            size="2",
+                            color="var(--gray-12)",
+                            line_height="1.6"
+                        ),
+                        align="start",
+                        spacing="1"
+                    ),
+                    rx.vstack(
+                        rx.text.strong("d (Differencing order)"),
+                        rx.text(
+                            "Number of times the series is differenced to make it stationary (remove trends). "
+                            "d=1 means we model the change in gold price (first derivative) rather than raw prices.",
+                            size="2",
+                            color="var(--gray-12)",
+                            line_height="1.6"
+                        ),
+                        align="start",
+                        spacing="1"
+                    ),
+                    rx.vstack(
+                        rx.text.strong("q (Moving Average order)"),
+                        rx.text(
+                            "Number of past forecast errors used to correct predictions. "
+                            "q=1 means the model learns from the previous prediction error to improve the next forecast.",
+                            size="2",
+                            color="var(--gray-12)",
+                            line_height="1.6"
+                        ),
+                        align="start",
+                        spacing="1"
+                    ),
+                    columns="3",
+                    spacing="3",
+                    width="100%",
+                    margin_bottom="1.5em"
+                ),
+                
+                rx.heading("SARIMA (p,d,q)x(P,D,Q,s): Seasonal ARIMA", size="4", weight="bold", margin_bottom="0.75em", color=rx.color("purple", 10)),
+                rx.text(
+                    "SARIMA extends ARIMA by adding seasonal components. Our model SARIMA(1,1,1)x(1,1,1,12) includes:",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.7",
+                    margin_bottom="0.75em"
+                ),
+                rx.grid(
+                    rx.vstack(
+                        rx.text.strong("P (Seasonal AR)"),
+                        rx.text("Uses prices from 12 months ago (P=1)", size="2", color="var(--gray-12)"),
+                        align="start",
+                        spacing="1"
+                    ),
+                    rx.vstack(
+                        rx.text.strong("D (Seasonal Differencing)"),
+                        rx.text("Removes yearly trends (D=1)", size="2", color="var(--gray-12)"),
+                        align="start",
+                        spacing="1"
+                    ),
+                    rx.vstack(
+                        rx.text.strong("Q (Seasonal MA)"),
+                        rx.text("Corrects using errors from 12 months ago (Q=1)", size="2", color="var(--gray-12)"),
+                        align="start",
+                        spacing="1"
+                    ),
+                    rx.vstack(
+                        rx.text.strong("s (Seasonal period)"),
+                        rx.text("12 months - captures annual patterns", size="2", color="var(--gray-12)"),
+                        align="start",
+                        spacing="1"
+                    ),
+                    columns="4",
+                    spacing="3",
+                    width="100%"
+                ),
+                spacing="3",
+                align="start"
+            ),
+            padding="1.5em",
+            background=rx.color("blue", 1),
+            border="1px solid",
+            border_color=rx.color("blue", 5),
+            border_radius="var(--radius-4)",
+            margin_bottom="1.5em"
+        ),
+        
+        # Results comparison
+        rx.heading("Model Results", size="5", weight="bold", margin_bottom="1em"),
         rx.grid(
             rx.box(
                 rx.vstack(
                     rx.heading("ARIMA (1,1,1)", size="5", weight="bold", margin_bottom="0.5em"),
-                    rx.heading("R² = -0.480", size="6", color=rx.color("red", 10), margin_bottom="0.5em"),
-                    rx.text("RMSE: $503.12 | MAE: $321.93", size="2", color="var(--gray-11)", margin_bottom="0.75em"),
+                    rx.heading("R² = -0.480", size="6", weight="bold", color=rx.color("red", 10), margin_bottom="0.5em"),
                     rx.text(
-                        "Negative R² means worse than predicting the mean. Autoregressive patterns alone cannot explain gold prices. "
-                        "Gold responds to economic events, not just past values.",
+                        rx.text.strong("RMSE: "), "$503.12 | ",
+                        rx.text.strong("MAE: "), "$321.93",
+                        size="2",
+                        color="var(--gray-11)",
+                        margin_bottom="0.75em"
+                    ),
+                    rx.text(
+                        rx.text.strong("Negative R²"),
+                        " indicates the model performs ",
+                        rx.text.strong("worse than simply predicting the mean"),
+                        " gold price. "
+                        "Autoregressive patterns alone cannot explain gold price movements. ",
+                        rx.text.strong("Gold responds to economic events, not just past values"),
+                        ".",
                         size="2",
                         color="var(--gray-12)",
                         line_height="1.6"
@@ -1296,11 +1444,21 @@ def time_series_section() -> rx.Component:
             rx.box(
                 rx.vstack(
                     rx.heading("SARIMA (1,1,1)x(1,1,1,12)", size="5", weight="bold", margin_bottom="0.5em"),
-                    rx.heading("R² = 0.270", size="6", color=rx.color("orange", 10), margin_bottom="0.5em"),
-                    rx.text("RMSE: $353.57 | MAE: $233.26", size="2", color="var(--gray-11)", margin_bottom="0.75em"),
+                    rx.heading("R² = 0.270", size="6", weight="bold", color=rx.color("orange", 10), margin_bottom="0.5em"),
                     rx.text(
-                        "Seasonal component improves performance but still explains only 27% of variance. "
-                        "Monthly seasonality exists but is weak compared to macroeconomic drivers.",
+                        rx.text.strong("RMSE: "), "$353.57 | ",
+                        rx.text.strong("MAE: "), "$233.26",
+                        size="2",
+                        color="var(--gray-11)",
+                        margin_bottom="0.75em"
+                    ),
+                    rx.text(
+                        rx.text.strong("Seasonal component improves performance"),
+                        " substantially but still explains ",
+                        rx.text.strong("only 27% of variance"),
+                        ". Monthly seasonality exists but remains ",
+                        rx.text.strong("weak compared to macroeconomic drivers"),
+                        " (CPI alone explains 72%).",
                         size="2",
                         color="var(--gray-12)",
                         line_height="1.6"
@@ -1324,15 +1482,22 @@ def time_series_section() -> rx.Component:
             rx.vstack(
                 rx.hstack(
                     rx.icon("triangle-alert", size=24, color=rx.color("red", 9)),
-                    rx.heading("Why Time Series Failed", size="4", weight="bold"),
+                    rx.heading("Why Time Series Models Failed", size="4", weight="bold"),
                     spacing="2",
                     align="center",
                     margin_bottom="0.5em"
                 ),
                 rx.text(
-                    "Time series models assume future values depend on past values. Gold prices violate this assumption - "
-                    "they respond to inflation, interest rates, geopolitical events. Historical patterns alone miss the fundamental drivers. "
-                    "This limitation provides a clear hypothesis and leads directly to our next logical step: testing multivariate models that can see and utilize this external economic data.",
+                    "Time series models assume future values depend primarily on past values and temporal patterns. ",
+                    rx.text.strong("Gold prices violate this assumption"),
+                    " because they are ",
+                    rx.text.strong("fundamentally driven by external economic factors"),
+                    ": inflation expectations, interest rate policy, currency strength, and geopolitical risk. ",
+                    rx.text.strong("Historical patterns alone miss these fundamental drivers"),
+                    ". This limitation provides a clear hypothesis: "
+                    "we need ",
+                    rx.text.strong("multivariate models that can incorporate external economic data"),
+                    " to capture what truly drives gold prices.",
                     size="3",
                     color="var(--gray-12)",
                     line_height="1.7"
@@ -1424,7 +1589,8 @@ def baseline_models() -> rx.Component:
                     margin_bottom="0.5em"
                 ),
                 rx.text(
-                    "R²=0.947 indicates 95% of gold price variance explained. The multivariate approach combining inflation, "
+                    rx.text.strong("R²=0.947"),
+                    " indicates 95% of gold price variance explained. The multivariate approach combining inflation, "
                     "interest rates, stock market, and currency data substantially outperforms all univariate and time series methods. "
                     "This demonstrates that gold prices are driven by macroeconomic interactions rather than single factors or historical patterns.",
                     size="3",
@@ -1459,10 +1625,27 @@ def traditional_ml() -> rx.Component:
         comparison_table_section(
             "Traditional Machine Learning: Non-Linear Methods",
             "Moving beyond linear assumptions, we test kernel-based (SVR) and tree-based (Random Forest, XGBoost) methods. "
-            "These models can capture non-linear relationships and feature interactions. Both SVR and Random Forest achieve R²=0.986, "
-            "a significant jump from the baseline, reducing error by nearly 50%.",
-            ml_data,
-            highlight_best=True
+            "These models can capture non-linear relationships and feature interactions.",
+            ml_data
+        ),
+        
+        # Key highlights
+        rx.box(
+            rx.text(
+                "Both SVR and Random Forest achieve ",
+                rx.text.strong("R² = 0.986"),
+                ", a significant jump from the baseline, reducing error by ",
+                rx.text.strong("nearly 50%"),
+                ".",
+                size="3",
+                color="var(--gray-12)",
+                line_height="1.7"
+            ),
+            padding="1em",
+            background=rx.color("green", 2),
+            border_left=f"4px solid {rx.color('green', 9)}",
+            border_radius="var(--radius-3)",
+            margin_bottom="1em"
         ),
         
         rx.grid(
@@ -1526,21 +1709,51 @@ def traditional_ml() -> rx.Component:
             margin_y="1em"
         ),
         
-        insight_box(
-            "circle-alert",
-            "XGBoost Surprise: Why Did It Underperform?",
-            "XGBoost (R²=0.973) surprisingly performed worse than SVR and Random Forest. This suggests the model may be overfitting "
-            "to training data despite regularization. XGBoost's strength lies in tabular data with complex interactions, but our "
-            "relatively clean dataset with strong linear trends may not benefit as much from gradient boosting's aggressive optimization.",
-            color_scheme="amber"
+        rx.box(
+            rx.text(
+                "XGBoost (",
+                rx.text.strong("R² = 0.973"),
+                ") surprisingly performed worse than SVR and Random Forest. This suggests the model may be overfitting "
+                "to training data despite regularization. XGBoost's strength lies in tabular data with complex interactions, but our "
+                "relatively clean dataset with strong linear trends may not benefit as much from gradient boosting's aggressive optimization.",
+                size="3",
+                color="var(--gray-12)",
+                line_height="1.7"
+            ),
+            padding="1.25em",
+            background=rx.color("amber", 2),
+            border_left=f"4px solid {rx.color('amber', 9)}",
+            border_radius="var(--radius-3)",
+            margin_bottom="1em"
         ),
         
-        insight_box(
-            "target",
-            "Feature Importance from Random Forest",
-            "Top 3 most important features: 1) CPI (inflation) - 32% importance, 2) Silver_Futures - 18%, 3) S&P_500 - 15%. "
-            "This confirms our EDA findings: inflation and precious metals co-movement are the strongest drivers of gold prices.",
-            color_scheme="green"
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.icon("target", size=24, color=rx.color("green", 9)),
+                    rx.heading("Feature Importance from Random Forest", size="4", weight="bold"),
+                    spacing="2",
+                    align="center"
+                ),
+                rx.text(
+                    "Top 3 most important features: 1) CPI (inflation) - ",
+                    rx.text.strong("32% importance"),
+                    ", 2) Silver_Futures - ",
+                    rx.text.strong("18%"),
+                    ", 3) S&P_500 - ",
+                    rx.text.strong("15%"),
+                    ". This confirms our EDA findings: inflation and precious metals co-movement are the strongest drivers of gold prices.",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.7"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.25em",
+            background=rx.color("green", 2),
+            border_left=f"4px solid {rx.color('green', 9)}",
+            border_radius="var(--radius-3)"
         ),
         
         spacing="3",
@@ -1563,10 +1776,29 @@ def deep_learning_univariate() -> rx.Component:
         comparison_table_section(
             "Deep Learning - Univariate (Gold Price Only)",
             "Before using all 13 features, we test if deep learning can extract temporal patterns from gold price history alone. "
-            "MLP (feedforward) performs well (R²=0.960) as it uses all features but no sequence. "
+            "MLP (feedforward) performs well as it uses all features but no sequence. "
             "Recurrent models (RNN/LSTM/GRU) use sliding windows of past prices but struggle without external features.",
-            dl_uni_data,
-            highlight_best=True
+            dl_uni_data
+            # highlight_best=True
+        ),
+        
+        # Highlight key metrics
+        rx.box(
+            rx.text(
+                "MLP achieves ",
+                rx.text.strong("R² = 0.960"),
+                " while recurrent models struggle with only ",
+                rx.text.strong("R² = 0.60-0.84"),
+                " when using gold price history alone.",
+                size="3",
+                color="var(--gray-12)",
+                line_height="1.7"
+            ),
+            padding="1em",
+            background=rx.color("blue", 2),
+            border_left=f"4px solid {rx.color('blue', 9)}",
+            border_radius="var(--radius-3)",
+            margin_bottom="1em"
         ),
         
         rx.box(
@@ -1616,22 +1848,67 @@ def deep_learning_univariate() -> rx.Component:
             margin_y="1em"
         ),
         
-        insight_box(
-            "brain",
-            "Why MLP Outperforms RNN/LSTM/GRU (Univariate)?",
-            "MLP uses all 13 macroeconomic features simultaneously (CPI, interest rates, S&P 500, etc.), while univariate RNN/LSTM/GRU "
-            "only see past gold prices. Without economic context, recurrent models struggle to predict sudden regime changes "
-            "(e.g., 2008 crisis, COVID-19). This proves gold isn't just autoregressive - it needs external features!",
-            color_scheme="purple"
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.icon("brain", size=24, color=rx.color("purple", 9)),
+                    rx.heading("Why MLP Outperforms RNN/LSTM/GRU (Univariate)?", size="4", weight="bold"),
+                    spacing="2",
+                    align="center"
+                ),
+                rx.text(
+                    "MLP uses ",
+                    rx.text.strong("all 13 macroeconomic features"),
+                    " simultaneously (CPI, interest rates, S&P 500, etc.), while univariate RNN/LSTM/GRU "
+                    "only see past gold prices. Without economic context, recurrent models struggle to predict sudden regime changes "
+                    "(e.g., 2008 crisis, COVID-19). This proves gold isn't just autoregressive - it ",
+                    rx.text.strong("needs external features"),
+                    "!",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.7"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.25em",
+            background=rx.color("purple", 2),
+            border_left=f"4px solid {rx.color('purple', 9)}",
+            border_radius="var(--radius-3)",
+            margin_bottom="1em"
         ),
         
-        insight_box(
-            "layers",
-            "LSTM vs GRU: The Gate Dilemma",
-            "LSTM (R²=0.603) and RNN (R²=0.600) performed nearly identically and poorly. GRU (R²=0.843) did better by using "
-            "simpler gating mechanisms (2 gates vs LSTM's 3). With limited data (univariate), LSTM's complexity became a liability. "
-            "But this changes dramatically with multivariate inputs...",
-            color_scheme="blue"
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.icon("layers", size=24, color=rx.color("blue", 9)),
+                    rx.heading("LSTM vs GRU: The Gate Dilemma", size="4", weight="bold"),
+                    spacing="2",
+                    align="center"
+                ),
+                rx.text(
+                    "LSTM (",
+                    rx.text.strong("R² = 0.603"),
+                    ") and RNN (",
+                    rx.text.strong("R² = 0.600"),
+                    ") performed nearly identically and poorly. GRU (",
+                    rx.text.strong("R² = 0.843"),
+                    ") did better by using "
+                    "simpler gating mechanisms (",
+                    rx.text.strong("2 gates vs LSTM's 3"),
+                    "). With limited data (univariate), LSTM's complexity became a liability. "
+                    "But this changes dramatically with multivariate inputs...",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.7"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.25em",
+            background=rx.color("blue", 2),
+            border_left=f"4px solid {rx.color('blue', 9)}",
+            border_radius="var(--radius-3)"
         ),
         
         spacing="3",
@@ -1659,9 +1936,17 @@ def deep_learning_multivariate() -> rx.Component:
                     align="center"
                 ),
                 rx.text(
-                    "By combining temporal patterns (12-month windows) with macroeconomic context (13 features), "
-                    "multivariate recurrent models achieve highly accurate predictive fit."
-                    "GRU and LSTM both reach R²=0.990, reducing average error to just $35-38.",
+                    "By combining temporal patterns (",
+                    rx.text.strong("12-month windows"),
+                    ") with macroeconomic context (",
+                    rx.text.strong("13 features"),
+                    "), "
+                    "multivariate recurrent models achieve highly accurate predictive fit. "
+                    "GRU and LSTM both reach ",
+                    rx.text.strong("R² = 0.990"),
+                    ", reducing average error to just ",
+                    rx.text.strong("$35-38"),
+                    ".",
                     size="4",
                     color="var(--gray-12)",
                     line_height="1.7"
@@ -1679,10 +1964,28 @@ def deep_learning_multivariate() -> rx.Component:
         comparison_table_section(
             "Final Showdown: Multivariate Recurrent Models",
             "These models see both time patterns AND economic drivers simultaneously. "
-            "Each timestep contains 13 features (CPI, interest rates, VIX, S&P 500, etc.), allowing the model to learn "
+            "Each timestep contains all features, allowing the model to learn "
             "how gold responds to changing economic conditions over time.",
             dl_multi_data,
-            highlight_best=True
+        ),
+        
+        # Highlight key result
+        rx.box(
+            rx.text(
+                "Each timestep contains ",
+                rx.text.strong("13 features"),
+                " (CPI, interest rates, VIX, S&P 500, etc.), enabling both GRU and LSTM to achieve ",
+                rx.text.strong("R² = 0.990"),
+                ".",
+                size="3",
+                color="var(--gray-12)",
+                line_height="1.7"
+            ),
+            padding="1em",
+            background=rx.color("purple", 2),
+            border_left=f"4px solid {rx.color('purple', 9)}",
+            border_radius="var(--radius-3)",
+            margin_bottom="1em"
         ),
         
         rx.grid(
@@ -1774,23 +2077,76 @@ def deep_learning_multivariate() -> rx.Component:
             margin_y="1.5em"
         ),
         
-        insight_box(
-            "zap",
-            "Why GRU Wins Over LSTM",
-            "Both achieve R²=0.990, but GRU has lower MAE ($34.94 vs $37.84) and trains ~20% faster. "
-            "GRU's simpler architecture (2 gates instead of 3) is sufficient for our dataset size. "
-            "LSTM's forget gate advantage doesn't materialize because our 12-month window already captures relevant history. "
-            "GRU is the Goldilocks solution: complex enough to excel, simple enough to be efficient.",
-            color_scheme="amber"
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.icon("zap", size=24, color=rx.color("amber", 9)),
+                    rx.heading("Why GRU Wins Over LSTM", size="4", weight="bold"),
+                    spacing="2",
+                    align="center"
+                ),
+                rx.text(
+                    "Both achieve ",
+                    rx.text.strong("R² = 0.990"),
+                    ", but GRU has lower MAE (",
+                    rx.text.strong("$34.94 vs $37.84"),
+                    ") and trains ",
+                    rx.text.strong("~20% faster"),
+                    ". "
+                    "GRU's simpler architecture (",
+                    rx.text.strong("2 gates instead of 3"),
+                    ") is sufficient for our dataset size. "
+                    "LSTM's forget gate advantage doesn't materialize because our ",
+                    rx.text.strong("12-month window"),
+                    " already captures relevant history. "
+                    "GRU is the Goldilocks solution: complex enough to excel, simple enough to be efficient.",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.7"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.25em",
+            background=rx.color("amber", 2),
+            border_left=f"4px solid {rx.color('amber', 9)}",
+            border_radius="var(--radius-3)",
+            margin_bottom="1em"
         ),
         
-        insight_box(
-            "trending-up",
-            "The Multivariate Advantage",
-            "Comparing univariate vs multivariate GRU: R² jumped from 0.843 -> 0.990 (+0.147), and MAE dropped from $122.95 -> $34.94 (-72%). "
-            "Why? The model now understands WHY gold prices change. When CPI rises, interest rates fall, and VIX spikes, "
-            "the model learned to predict gold surges - something impossible from price history alone.",
-            color_scheme="green"
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.icon("trending-up", size=24, color=rx.color("green", 9)),
+                    rx.heading("The Multivariate Advantage", size="4", weight="bold"),
+                    spacing="2",
+                    align="center"
+                ),
+                rx.text(
+                    "Comparing univariate vs multivariate GRU: R² jumped from ",
+                    rx.text.strong("0.843 → 0.990"),
+                    " (",
+                    rx.text.strong("+0.147"),
+                    "), and MAE dropped from ",
+                    rx.text.strong("$122.95 → $34.94"),
+                    " (",
+                    rx.text.strong("-72%"),
+                    "). "
+                    "Why? The model now understands ",
+                    rx.text.strong("WHY"),
+                    " gold prices change. When CPI rises, interest rates fall, and VIX spikes, "
+                    "the model learned to predict gold surges - something impossible from price history alone.",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.7"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.25em",
+            background=rx.color("green", 2),
+            border_left=f"4px solid {rx.color('green', 9)}",
+            border_radius="var(--radius-3)"
         ),
         
         spacing="3",
@@ -1823,9 +2179,15 @@ def grand_comparison() -> rx.Component:
         rx.heading("Grand Comparison: All 14 Models Ranked", size="7", weight="bold", margin_bottom="1em"),
         
         rx.text(
-            "Here's the complete leaderboard of all models tested, sorted by R². "
+            "Here's the complete leaderboard of ",
+            rx.text.strong("all 14 models"),
+            " tested, sorted by R². "
             "The progression from baseline to deep learning shows a clear trend: "
-            "complexity pays off when combined with rich multivariate features and temporal modeling.",
+            "complexity pays off when combined with ",
+            rx.text.strong("rich multivariate features"),
+            " and ",
+            rx.text.strong("temporal modeling"),
+            ".",
             size="4",
             color="var(--gray-12)",
             line_height="1.7",
@@ -1990,7 +2352,13 @@ def whats_next() -> rx.Component:
             ),
             
             rx.text(
-                "Based on comprehensive evaluation, GRU Multivariate emerges as the optimal model with R²=0.990 and MAE=$34.94. "
+                "Based on comprehensive evaluation, ",
+                rx.text.strong("GRU Multivariate"),
+                " emerges as the optimal model with ",
+                rx.text.strong("R² = 0.990"),
+                " and ",
+                rx.text.strong("MAE = $34.94"),
+                ". "
                 "In the next chapter, we will deploy this model for real-time forecasting:",
                 size="4",
                 color="var(--gray-12)",
@@ -2027,7 +2395,11 @@ def whats_next() -> rx.Component:
             
             rx.text(
                 "We'll also compare our results against published research and industry benchmarks to validate "
-                "that our R²=0.990 achievement represents genuine state-of-the-art performance.",
+                "that our ",
+                rx.text.strong("R² = 0.990"),
+                " achievement represents genuine ",
+                rx.text.strong("state-of-the-art performance"),
+                ".",
                 size="3",
                 color="var(--gray-12)",
                 line_height="1.7",
