@@ -1,5 +1,7 @@
 """Chapter 2: Exploratory Data Analysis - Understanding the Gold Price Landscape"""
 
+"""Chapter 2: Exploratory Data Analysis - Understanding the Gold Price Landscape"""
+
 import reflex as rx
 import json
 import plotly.graph_objects as go
@@ -75,7 +77,7 @@ def metric_card(label: str, value: str, icon: str, color_scheme: str = "amber") 
         rx.vstack(
             rx.icon(icon, size=32, color=rx.color(color_scheme, 9)),
             rx.heading(value, size="7", weight="bold"),
-            rx.text(label, size="2", color="black", text_align="center"),
+            rx.text(label, size="2", color="var(--gray-12)", text_align="center"),
             spacing="2",
             align="center"
         ),
@@ -99,10 +101,10 @@ def insight_card(title: str, description: str, icon: str = "lightbulb") -> rx.Co
     """Display an insight card with icon and description."""
     return rx.box(
         rx.hstack(
-            rx.icon(icon, size=24, color=rx.color("blue", 9)),
+            rx.icon(icon, size=48, color=rx.color("blue", 9)),
             rx.vstack(
                 rx.heading(title, size="4", weight="bold"),
-                rx.text(description, size="3", color="black", line_height="1.7"),
+                rx.text(description, size="3", color="var(--gray-12)", line_height="1.7"),
                 spacing="2",
                 align="start"
             ),
@@ -115,6 +117,7 @@ def insight_card(title: str, description: str, icon: str = "lightbulb") -> rx.Co
         border_radius="var(--radius-3)",
         margin_bottom="1em"
     )
+
 
 # ======================================================================
 # MAIN PAGE SECTIONS
@@ -130,19 +133,19 @@ def executive_summary() -> rx.Component:
                 rx.unordered_list(
                     rx.list_item(
                         rx.text.strong("Strong Inflation Link: "),
-                        "CPI explains 72% of gold price variance (r=0.85) – confirming gold's role as inflation hedge"
+                        "CPI explains 75% of gold price variance (r=0.87) – confirming gold's role as inflation hedge"
                     ),
                     rx.list_item(
                         rx.text.strong("Inverse Rate Relationship: "),
-                        "Higher real interest rates lead to lower gold prices (r=-0.40) due to opportunity cost"
+                        "Higher real interest rates lead to lower gold prices (r=-0.26) due to opportunity cost"
                     ),
                     rx.list_item(
                         rx.text.strong("Equity Market Surprise: "),
-                        "Gold and S&P 500 move together (r=0.80), challenging the 'safe haven' narrative"
+                        "Gold and S&P 500 move together (r=0.82), challenging the 'safe haven' narrative"
                     ),
                     rx.list_item(
                         rx.text.strong("VIX Paradox: "),
-                        "Market volatility shows NO correlation with gold (r=0.00) – unexpected finding!"
+                        "Market volatility shows NO correlation with gold (r≈0.00) – unexpected finding!"
                     ),
                     spacing="2",
                     padding_left="1.5em"
@@ -152,7 +155,7 @@ def executive_summary() -> rx.Component:
                     "the economic forces that drive gold prices. Through correlation analysis, distribution studies, "
                     "and interactive visualizations, we'll identify the 13 most predictive features for our models.",
                     size="3",
-                    color="black",
+                    color="var(--gray-12)",
                     margin_top="1em",
                     line_height="1.7"
                 ),
@@ -258,7 +261,7 @@ def data_collection_journey() -> rx.Component:
                                 "Since we join all data to Gold Spot Price (monthly), the timeline starts at the nearest month-end. "
                                 "From this date forward, we have 19.5 years (233 months) of complete data across all features.",
                                 size="3",
-                                color="black",
+                                color="var(--gray-12)",
                                 line_height="1.6"
                             ),
                             spacing="1",
@@ -487,7 +490,7 @@ def gold_spot_currency_analysis() -> rx.Component:
                         "The differences are purely exchange rate scaling, the underlying gold movement is identical. "
                         "Some currencies show slightly lower correlations (0.74-0.79) due to shorter historical data.",
                         size="3",
-                        color="black",
+                        color="var(--gray-12)",
                         line_height="1.6"
                     ),
                     spacing="2",
@@ -513,7 +516,7 @@ def gold_spot_currency_analysis() -> rx.Component:
                         "Most economic indicators (CPI, Fed rates, S&P 500) are USD-based, ensuring consistency. "
                         "Using USD eliminates currency conversion noise in our analysis.",
                         size="3",
-                        color="black",
+                        color="var(--gray-12)",
                         line_height="1.6"
                     ),
                     spacing="2",
@@ -539,7 +542,7 @@ def gold_spot_currency_analysis() -> rx.Component:
                         "Other currencies have gaps or shorter histories. Gold_Spot_USD provides 47 years of data, "
                         "though we only use 19.5 years (2006-2025) due to USD Index limitations.",
                         size="3",
-                        color="black",
+                        color="var(--gray-12)",
                         line_height="1.6"
                     ),
                     spacing="2",
@@ -566,7 +569,7 @@ def gold_spot_currency_analysis() -> rx.Component:
                     "Beyond currency selection, we also chose between three gold price representations. "
                     "All three have correlation near 1.0, but differ in what they represent:",
                     size="3",
-                    color="black",
+                    color="var(--gray-12)",
                     margin_bottom="1em",
                     line_height="1.6"
                 ),
@@ -646,7 +649,7 @@ def gold_spot_currency_analysis() -> rx.Component:
         rx.box(
             rx.vstack(
                 rx.hstack(
-                    rx.icon("chart-bar", size=20, color=rx.color("amber", 9)),
+                    rx.icon("bar-chart-3", size=20, color=rx.color("amber", 9)),
                     rx.heading("Gold Price Correlation Heatmap (All Currencies & Products)", size="5", weight="bold"),
                     spacing="2",
                     align="center"
@@ -654,9 +657,9 @@ def gold_spot_currency_analysis() -> rx.Component:
                 rx.text(
                     "Heatmap showing r > 0.99 between USD, EUR, GBP gold spot prices, and high correlation with futures/ETFs",
                     size="3",
-                    color="black"
+                    color="var(--gray-12)"
                 ),
-                rx.plotly(data=load_plotly_chart("gold_currency_heatmap"), width="900px"),
+                rx.plotly(data=load_plotly_chart("gold_currency_heatmap"), width="1000px"),
                 spacing="3",
                 align="start",
                 width="100%"
@@ -717,7 +720,7 @@ def target_variable_section() -> rx.Component:
                 rx.text(
                     "Interactive time series showing gold price evolution with major economic events",
                     size="3",
-                    color="black"
+                    color="var(--gray-12)"
                 ),
                 rx.plotly(data=load_plotly_chart("gold_price_timeseries"), width="1200px"),
                 spacing="3",
@@ -809,7 +812,7 @@ def distribution_analysis_section() -> rx.Component:
                             "Gold Spot price distribution shows right skewness with increasing trend over time. "
                             "The boxplot reveals several outliers during crisis periods (2008, 2020, 2024).",
                             size="3",
-                            color="black",
+                            color="var(--gray-12)",
                             margin_bottom="1em"
                         ),
                         rx.plotly(data=load_plotly_chart("gold_distributions"), width="1200px"),
@@ -826,7 +829,7 @@ def distribution_analysis_section() -> rx.Component:
                             "Market indicators (S&P 500, USD Index, Silver, Crude Oil) show varying distribution patterns. "
                             "Stock indices show strong upward trends, while commodities exhibit higher volatility.",
                             size="3",
-                            color="black",
+                            color="var(--gray-12)",
                             margin_bottom="1em"
                         ),
                         rx.plotly(data=load_plotly_chart("market_distributions"), width="1200px"),
@@ -843,7 +846,7 @@ def distribution_analysis_section() -> rx.Component:
                             "Macroeconomic variables (CPI, Unemployment, Interest Rates) reflect major policy shifts. "
                             "CPI shows steady inflation growth, while rates fluctuated dramatically during QE periods.",
                             size="3",
-                            color="black",
+                            color="var(--gray-12)",
                             margin_bottom="1em"
                         ),
                         rx.plotly(data=load_plotly_chart("macro_distributions"), width="1200px"),
@@ -860,7 +863,7 @@ def distribution_analysis_section() -> rx.Component:
                             "Volatility indicators (VIX, GPR, GPRA) capture market fear and geopolitical tensions. "
                             "VIX spikes during crises (2008, 2020), while GPR shows elevated levels during conflicts.",
                             size="3",
-                            color="black",
+                            color="var(--gray-12)",
                             margin_bottom="1em"
                         ),
                         rx.plotly(data=load_plotly_chart("volatility_distributions"), width="1000px"),
@@ -922,7 +925,7 @@ def correlation_analysis_section() -> rx.Component:
         rx.box(
             rx.vstack(
                 rx.hstack(
-                    rx.icon("chart-bar", size=20, color=rx.color("blue", 9)),
+                    rx.icon("bar-chart-3", size=20, color=rx.color("blue", 9)),
                     rx.heading("Full Feature Correlation Heatmap", size="5", weight="bold"),
                     spacing="2",
                     align="center"
@@ -930,7 +933,7 @@ def correlation_analysis_section() -> rx.Component:
                 rx.text(
                     "Interactive correlation matrix showing relationships between all 17 features in our dataset",
                     size="3",
-                    color="black"
+                    color="var(--gray-12)"
                 ),
                 rx.plotly(data=load_plotly_chart("correlation_heatmap"), width="1000px"),
                 spacing="3",
@@ -1019,6 +1022,132 @@ def correlation_analysis_section() -> rx.Component:
         align="start",
         width="100%"
     )
+    
+    # 3D Network Graph section
+    network_3d_content = rx.vstack(
+        rx.heading("3D Feature Correlation Network", size="7", weight="bold", margin_bottom="1em"),
+        
+        rx.text(
+            "Before deciding which features to keep, we need to understand how all 17 original features relate to each other. "
+            "This network visualization maps correlations in 3D space—features that move together cluster closely, "
+            "while independent features stand apart. Lines connect features with correlation above 0.3, "
+            "revealing natural groupings and redundancies.",
+            size="4",
+            color="var(--gray-12)",
+            line_height="1.7",
+            margin_bottom="1.5em"
+        ),
+        
+        rx.box(
+            rx.vstack(
+                rx.heading("Reading the Network", size="5", weight="bold", margin_bottom="1em"),
+                
+                rx.accordion.root(
+                    rx.accordion.item(
+                        header="Node Size = Volatility",
+                        content=rx.text(
+                            "Larger circles indicate features with higher variance, meaning they changed more dramatically "
+                            "over our 19.5-year period. Gold prices, stock indices, and crude oil typically show larger nodes "
+                            "due to their significant price swings during economic crises and booms.",
+                            size="3",
+                            line_height="1.7",
+                            color="var(--gray-12)"
+                        )
+                    ),
+                    rx.accordion.item(
+                        header="Position = Similarity",
+                        content=rx.text(
+                            "The algorithm pulls correlated features together like magnets. "
+                            "Tight clusters mean these features tell similar stories. For example, CPI and M2 Money Supply "
+                            "sit close together because both reflect inflationary pressures. We only need one of them.",
+                            size="3",
+                            line_height="1.7",
+                            color="var(--gray-12)"
+                        )
+                    ),
+                    rx.accordion.item(
+                        header="Green Lines = Moving Together",
+                        content=rx.text(
+                            "Green connections show positive correlations—when one feature rises, so does the other. "
+                            "Thicker lines mean stronger relationships. A thick green line between S&P 500 and NASDAQ "
+                            "(r = 0.99) visually confirms they're nearly identical.",
+                            size="3",
+                            line_height="1.7",
+                            color="var(--gray-12)"
+                        )
+                    ),
+                    rx.accordion.item(
+                        header="Red Lines = Opposing Forces",
+                        content=rx.text(
+                            "Red connections indicate inverse relationships. When real interest rates rise, gold prices tend to fall "
+                            "(opportunity cost). This economic principle appears as red lines between interest rate features and gold.",
+                            size="3",
+                            line_height="1.7",
+                            color="var(--gray-12)"
+                        )
+                    ),
+                    collapsible=True,
+                    variant="soft",
+                    width="100%",
+                    margin_bottom="1.5em"
+                ),
+                
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.icon("lightbulb", size=28, color=rx.color("amber", 10)),
+                            rx.heading("What This Tells Us", size="5", weight="bold", color=rx.color("amber", 11)),
+                            spacing="3",
+                            align="center",
+                            margin_bottom="0.75em"
+                        ),
+                        rx.text(
+                            "By examining this network, we identified ",
+                            rx.text.strong("4 features to remove", color=rx.color("red", 10), size="4"),
+                            " due to redundancy: ",
+                            rx.text.strong("NASDAQ ", color=rx.color("blue", 10)),
+                            "(too similar to S&P 500), ",
+                            rx.text.strong("M2 Supply ", color=rx.color("blue", 10)),
+                            "(duplicates CPI information), ",
+                            rx.text.strong("GPRT ", color=rx.color("blue", 10)),
+                            "(subset of GPR coverage), and ",
+                            rx.text.strong("Gold Futures ", color=rx.color("blue", 10)),
+                            "(nearly identical to Gold Spot). "
+                            "The network also reveals ",
+                            rx.text.strong("VIX as an isolated node", color=rx.color("green", 10)),
+                            "—it measures market fear independently of other indicators, "
+                            "making it worth keeping despite low gold correlation.",
+                            size="3",
+                            color="var(--gray-12)",
+                            line_height="1.8"
+                        ),
+                        spacing="3",
+                        align="start"
+                    ),
+                    padding="1.5em",
+                    background=rx.color("amber", 2),
+                    border=f"2px solid {rx.color('amber', 7)}",
+                    border_radius="var(--radius-4)",
+                    margin_top="1em",
+                    box_shadow="0 2px 8px rgba(0, 0, 0, 0.08)"
+                ),
+                
+                spacing="3",
+                align="start"
+            ),
+            padding="1.5em",
+            background=rx.color("gray", 1),
+            border="1px solid",
+            border_color=rx.color("gray", 5),
+            border_radius="var(--radius-4)",
+            margin_bottom="1.5em"
+        ),
+        
+        spacing="3",
+        align="start",
+        width="100%",
+        margin_bottom="1em"
+    )
 
 
 def feature_selection_section() -> rx.Component:
@@ -1044,7 +1173,7 @@ def feature_selection_section() -> rx.Component:
                     "Features with correlation > 0.90 are considered highly redundant. "
                     "We used correlation analysis and domain knowledge to decide which features to keep:",
                     size="3",
-                    color="black",
+                    color="var(--gray-12)",
                     margin_bottom="1em"
                 ),
                 
@@ -1172,7 +1301,6 @@ def feature_selection_section() -> rx.Component:
             border_radius="var(--radius-3)",
             margin_bottom="1.5em"
         ),
-        
         
         rx.box(
             rx.vstack(
@@ -1357,7 +1485,7 @@ def feature_selection_section() -> rx.Component:
                     rx.box(
                         rx.vstack(
                             rx.hstack(
-                                rx.icon("chart-bar", size=20, color=rx.color("green", 10)),
+                                rx.icon("bar-chart-2", size=20, color=rx.color("green", 10)),
                                 rx.heading("Macroeconomic", size="4", weight="bold", color=rx.color("green", 11)),
                                 spacing="2",
                                 align="center"
@@ -1533,7 +1661,7 @@ def key_insights_section() -> rx.Component:
             rx.accordion.item(
                 header="1. Inflation is the Dominant Driver",
                 content=rx.text(
-                    "CPI shows the strongest correlation (0.85) with gold prices, confirming gold's historical role "
+                    "CPI shows the strongest correlation (0.87) with gold prices, confirming gold's historical role "
                     "as an inflation hedge. When purchasing power declines, investors flock to gold to preserve wealth. "
                     "This relationship has remained consistent across different economic regimes.",
                     size="3",
@@ -1543,9 +1671,9 @@ def key_insights_section() -> rx.Component:
             rx.accordion.item(
                 header="2. Interest Rates Create Opportunity Cost",
                 content=rx.text(
-                    "Real interest rates show a negative correlation (-0.40) with gold. When rates are high, "
+                    "Real interest rates show a negative correlation (-0.26) with gold. When rates are high, "
                     "interest-bearing assets like bonds become more attractive, reducing demand for non-yielding gold. "
-                    "Negative real rates (inflation > interest rate) create the perfect environment for gold bull markets.",
+                    "Negative real rates (inflation > interest rate) create favorable conditions for gold.",
                     size="3",
                     line_height="1.7"
                 )
@@ -1553,7 +1681,7 @@ def key_insights_section() -> rx.Component:
             rx.accordion.item(
                 header="3. Gold-Equity Correlation Challenges Conventional Wisdom",
                 content=rx.text(
-                    "Surprisingly, gold and S&P 500 show strong positive correlation (0.80), contradicting the "
+                    "Surprisingly, gold and S&P 500 show strong positive correlation (0.82), contradicting the "
                     "'safe haven' narrative. This suggests both assets benefit from liquidity injections and monetary easing. "
                     "Gold may not be the portfolio diversifier many believe it to be in modern markets.",
                     size="3",
@@ -1561,9 +1689,9 @@ def key_insights_section() -> rx.Component:
                 )
             ),
             rx.accordion.item(
-                header="4. VIX Shows Zero Correlation – A Puzzle",
+                header="4. VIX Shows Near-Zero Correlation – A Puzzle",
                 content=rx.text(
-                    "The VIX (fear index) has essentially zero correlation (0.00) with gold prices. This is unexpected, "
+                    "The VIX (fear index) has essentially zero correlation (r≈0.00) with gold prices. This is unexpected, "
                     "as conventional wisdom suggests gold should rally during high volatility periods. This finding suggests "
                     "market fear and gold demand are driven by different mechanisms than commonly assumed.",
                     size="3",
@@ -1642,7 +1770,6 @@ def eda_page() -> rx.Component:
                 section_divider(),
                 
                 correlation_analysis_section(),
-                section_divider(),
                 
                 feature_selection_section(),
                 section_divider(),
