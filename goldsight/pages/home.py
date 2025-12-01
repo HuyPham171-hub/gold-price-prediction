@@ -27,9 +27,9 @@ def nav_card(
             rx.vstack(
                 # Icon
                 rx.icon(
-                    tag=icon_name,
+                    icon_name,
                     size=32,
-                    color_scheme=icon_color
+                    color=rx.color(icon_color, 9)
                 ),
                 
                 # Title
@@ -53,13 +53,13 @@ def nav_card(
                 rx.hstack(
                     rx.text(
                         "Learn more",
-                        color_scheme=Colors.PRIMARY,  # Amber accent
+                        color=rx.color(Colors.PRIMARY, 9),
                         size=Typography.SMALL
                     ),
                     rx.icon(
-                        tag="arrow-right",
+                        "arrow_right",
                         size=16,
-                        color_scheme=Colors.PRIMARY
+                        color=rx.color(Colors.PRIMARY, 9)
                     ),
                     align="center",
                     spacing=Spacing.TIGHT
@@ -200,7 +200,7 @@ def home_page() -> rx.Component:
                                 title="Chapter 2: The Exploration",
                                 desc="Discover the key correlations and insights from our EDA.",
                                 route="/eda",
-                                icon_name="bar-chart-big",
+                                icon_name="chart_bar_big",
                                 icon_color=Colors.WARNING  # Orange
                             ),
                             nav_card(
@@ -214,7 +214,7 @@ def home_page() -> rx.Component:
                                 title="Final App: The Forecast Tool",
                                 desc="Try our best-performing model to get live forecasts.",
                                 route="/forecast",
-                                icon_name="trending-up",
+                                icon_name="trending_up",
                                 icon_color=Colors.SUCCESS  # Green
                             ),
                             nav_card(

@@ -24,10 +24,6 @@ app = rx.App(
         gray_color="gray",     # Neutral colors
         radius="large",        # Rounded corners
     ),
-
-    stylesheets=[
-        "https://cdn.jsdelivr.net/npm/prism-theme-one-dark@1.0.0/prism-onedark.css"
-    ]
 )
 
 # Add pages with routes

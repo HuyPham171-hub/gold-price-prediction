@@ -1,5 +1,7 @@
 """Chapter 3: Modeling & Evaluation - From Statistics to Deep Learning"""
 
+"""Chapter 3: Modeling & Evaluation - From Statistics to Deep Learning"""
+
 import reflex as rx
 from goldsight.components import page_layout, chapter_progress
 

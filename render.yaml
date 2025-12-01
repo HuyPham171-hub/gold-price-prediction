@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: goldsight
+    runtime: python
+    region: singapore
+    plan: free
+    branch: main
+    
+    buildCommand: |
+      pip install --upgrade pip setuptools wheel
+      pip install --no-cache-dir -r requirements.txt
+      reflex init
+      reflex export --frontend-only --loglevel warning
+    
+    startCommand: "reflex run --env prod --backend-only --backend-host 0.0.0.0 --backend-port $PORT --loglevel warning"
+    
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: PYTHONUNBUFFERED
+        value: "1"

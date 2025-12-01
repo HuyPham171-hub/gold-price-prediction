@@ -1,0 +1,18 @@
+# Exclude from Render deployment to reduce memory usage
+notebooks/
+tests/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.vscode/
+.idea/
+*.md
+!README.md
+reports/
+results/
+src/
+models/*.keras
+models/*.h5
+*.ipynb
+.DS_Store

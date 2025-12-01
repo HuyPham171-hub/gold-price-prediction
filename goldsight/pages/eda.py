@@ -1,5 +1,7 @@
 """Chapter 2: Exploratory Data Analysis - Understanding the Gold Price Landscape"""
 
+"""Chapter 2: Exploratory Data Analysis - Understanding the Gold Price Landscape"""
+
 import reflex as rx
 import json
 import plotly.graph_objects as go
