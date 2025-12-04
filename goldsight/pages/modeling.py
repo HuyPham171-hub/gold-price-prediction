@@ -464,6 +464,27 @@ def univariate_regression_detail() -> rx.Component:
             ),
             
             rx.tabs.content(
+                # Top 9 Features Visualization
+                rx.box(
+                    rx.vstack(
+                        rx.heading("Top 9 Features Performance", size="5", weight="bold", margin_bottom="1em"),
+                        rx.image(
+                            src="/modeling_plots/univariate/top_9_polynomial.png",
+                            width="100%",
+                            border_radius="var(--radius-3)",
+                            border="1px solid",
+                            border_color=rx.color("gray", 5)
+                        ),
+                        spacing="2",
+                        align="start"
+                    ),
+                    padding="1.5em",
+                    background=rx.color("gray", 1),
+                    border="1px solid",
+                    border_color=rx.color("gray", 5),
+                    border_radius="var(--radius-4)",
+                    margin_bottom="1.5em"
+                ),
                 rx.vstack(
                     rx.grid(
                         rx.box(
@@ -704,7 +725,7 @@ def univariate_regression_detail() -> rx.Component:
             default_value="table",
             width="100%"
         ),
-        
+
         spacing="3",
         align="start",
         width="100%",
@@ -731,7 +752,6 @@ def multivariate_regression_detail() -> rx.Component:
         
         rx.grid(
             metric_card("R²", "0.947", "green", "95% variance explained"),
-            metric_card("Adj R²", "0.928", "blue", "Adjusted for features"),
             metric_card("RMSE", "$115.88", "purple", "Typical error"),
             metric_card("MAE", "$77.06", "amber", "Average deviation"),
             columns="4",
@@ -916,7 +936,6 @@ def multivariate_regression_detail() -> rx.Component:
             rx.tabs.content(
                 rx.vstack(
                     rx.heading("Model Diagnostics & Assumptions", size="5", weight="bold", margin_bottom="1em"),
-                    
                     rx.grid(
                         rx.box(
                             rx.vstack(
@@ -1062,6 +1081,37 @@ def multivariate_regression_detail() -> rx.Component:
                         border_color=rx.color("gray", 5),
                         border_radius="var(--radius-3)",
                         margin_top="1em"
+                    ),
+
+                    # Diagnostic Plots Visualization
+                    rx.box(
+                        rx.vstack(
+                            rx.heading("Diagnostic Plots (3-Panel)", size="5", weight="bold", margin_bottom="1em"),
+                            rx.image(
+                                src="/modeling_plots/multivariate/diagnostics_3panel.png",
+                                width="100%",
+                                border_radius="var(--radius-3)",
+                                border="1px solid",
+                                border_color=rx.color("gray", 5)
+                            ),
+                            rx.text(
+                                "(a) Predicted vs Actual shows strong linear fit with R²=0.947. "
+                                "(b) Residuals vs Predicted reveals some heteroscedasticity (wider spread at extremes). "
+                                "(c) Residual Distribution shows positive skew and heavy tails (non-normal).",
+                                size="2",
+                                color="var(--gray-11)",
+                                line_height="1.6",
+                                margin_top="0.5em"
+                            ),
+                            spacing="2",
+                            align="start"
+                        ),
+                        padding="1.5em",
+                        background=rx.color("blue", 1),
+                        border="1px solid",
+                        border_color=rx.color("blue", 5),
+                        border_radius="var(--radius-4)",
+                        margin_top="1.5em"
                     ),
                     
                     spacing="3",
@@ -1226,12 +1276,12 @@ def multivariate_regression_detail() -> rx.Component:
             default_value="coef",
             width="100%"
         ),
-        
+
         spacing="3",
         align="start",
         width="100%",
         margin_bottom="2em"
-    )
+    ),
 
 
 def polynomial_regression_section() -> rx.Component:
@@ -1246,6 +1296,36 @@ def polynomial_regression_section() -> rx.Component:
             color="var(--gray-12)",
             line_height="1.7",
             margin_bottom="1em"
+        ),
+        
+        # Visualization: Linear vs Polynomial Comparison
+        rx.box(
+            rx.vstack(
+                rx.heading("Linear vs Polynomial Fit: Silver Futures", size="5", weight="bold", margin_bottom="1em"),
+                rx.image(
+                    src="/modeling_plots/polynomial/silver_compare_polynomial.png",
+                    width="100%",
+                    border_radius="var(--radius-3)",
+                    border="1px solid",
+                    border_color=rx.color("gray", 5)
+                ),
+                rx.text(
+                    "Comparing linear (degree 1) and polynomial (degree 2) fits for Silver Futures. "
+                    "The polynomial curve captures slight non-linearity but improves R² by only 1%.",
+                    size="2",
+                    color="var(--gray-11)",
+                    text_align="center",
+                    margin_top="0.5em"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.5em",
+            background=rx.color("gray", 1),
+            border="1px solid",
+            border_color=rx.color("gray", 5),
+            border_radius="var(--radius-4)",
+            margin_bottom="1.5em"
         ),
         
         rx.box(
@@ -1474,10 +1554,42 @@ def time_series_section() -> rx.Component:
                 border_color=rx.color("orange", 5),
                 border_radius="var(--radius-4)"
             ),
+
+
             
             columns="2",
             spacing="3",
             width="100%"
+        ),
+        
+        # ARIMA Forecast Visualization
+        rx.box(
+            rx.vstack(
+                rx.heading("ARIMA Forecast vs Actual Gold Prices", size="5", weight="bold", margin_bottom="1em"),
+                rx.image(
+                    src="/modeling_plots/arima/arima_forcast.png",
+                    width="100%",
+                    border_radius="var(--radius-3)",
+                    border="1px solid",
+                    border_color=rx.color("gray", 5)
+                ),
+                rx.text(
+                    "Train series (blue) shows historical patterns. ARIMA forecast (green) diverges from actual test values (orange), "
+                    "demonstrating the model's inability to capture gold price movements driven by external economic factors.",
+                    size="2",
+                    color="var(--gray-11)",
+                    line_height="1.6",
+                    margin_top="0.5em"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.5em",
+            background=rx.color("gray", 1),
+            border="1px solid",
+            border_color=rx.color("gray", 5),
+            border_radius="var(--radius-4)",
+            margin_top="1.5em"
         ),
         
         rx.box(

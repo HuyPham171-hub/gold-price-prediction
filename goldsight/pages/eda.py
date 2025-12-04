@@ -1165,6 +1165,35 @@ def feature_selection_section() -> rx.Component:
             margin_bottom="1.5em"
         ),
         
+        # Correlation Heatmap Visualization
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.icon("bar-chart-3", size=20, color=rx.color("purple", 9)),
+                    rx.heading("Feature Correlation Heatmap (17 Features)", size="5", weight="bold"),
+                    spacing="2",
+                    align="center"
+                ),
+                rx.text(
+                    "This heatmap reveals which features are highly redundant (dark red cells with r > 0.90). "
+                    "Clusters of high correlation guide our feature selection decisions.",
+                    size="3",
+                    color="var(--gray-12)",
+                    margin_bottom="0.5em"
+                ),
+                rx.plotly(data=load_plotly_chart("correlation_heatmap"), width="1000px"),
+                spacing="3",
+                align="start",
+                width="100%"
+            ),
+            padding="1.5em",
+            border="1px solid",
+            border_color=rx.color("gray", 5),
+            border_radius="var(--radius-4)",
+            background_color=rx.color("gray", 1),
+            margin_bottom="1.5em"
+        ),
+        
         rx.box(
             rx.vstack(
                 rx.heading("Multicollinearity Detection", size="5", weight="bold", margin_bottom="1em"),
