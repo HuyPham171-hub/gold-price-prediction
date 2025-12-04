@@ -2384,7 +2384,401 @@ def deep_learning_univariate() -> rx.Component:
             padding="1.25em",
             background=rx.color("blue", 2),
             border_left=f"4px solid {rx.color('blue', 9)}",
-            border_radius="var(--radius-3)"
+            border_radius="var(--radius-3)",
+            margin_bottom="1.5em"
+        ),
+        
+        # Model Visualizations - Tabbed Interface
+        rx.heading("Model Training & Performance Visualizations", size="5", weight="bold", margin_bottom="1em", margin_top="1em"),
+        
+        rx.tabs.root(
+            rx.tabs.list(
+                rx.tabs.trigger("MLP", value="mlp"),
+                rx.tabs.trigger("RNN", value="rnn"),
+                rx.tabs.trigger("LSTM", value="lstm"),
+                rx.tabs.trigger("GRU", value="gru"),
+            ),
+            
+            # MLP Tab
+            rx.tabs.content(
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.icon("layers", size=24, color=rx.color("blue", 9)),
+                            rx.heading("MLP (Multilayer Perceptron) - R² = 0.960", size="4", weight="bold", color=rx.color("blue", 10)),
+                            spacing="2",
+                            align="center",
+                            margin_bottom="0.5em"
+                        ),
+                        rx.text(
+                            "Best univariate performer using all 13 features simultaneously (256→128→64→32 architecture with Dropout & BatchNorm).",
+                            size="2",
+                            color="var(--gray-11)",
+                            margin_bottom="1em"
+                        ),
+                        
+                        # Training History
+                        rx.vstack(
+                            rx.heading("Training History", size="3", weight="bold", margin_bottom="0.5em"),
+                            rx.image(
+                                src="/modeling_plots/mlp/training_history.png",
+                                width="100%",
+                                border_radius="var(--radius-3)",
+                                border="1px solid",
+                                border_color=rx.color("gray", 5)
+                            ),
+                            rx.text(
+                                "MLP converges quickly with smooth loss reduction. Validation loss stabilizes around epoch 30, indicating good generalization.",
+                                size="2",
+                                color="var(--gray-11)",
+                                text_align="center",
+                                margin_top="0.5em"
+                            ),
+                            spacing="2",
+                            margin_bottom="1em"
+                        ),
+                        
+                        # Prediction vs Actual (2-column grid)
+                        rx.grid(
+                            rx.vstack(
+                                rx.heading("Predictions vs Actual", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/mlp/pred_actual.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Strong correlation between predicted and actual values (R² = 0.960).",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            rx.vstack(
+                                rx.heading("Linear Fit Analysis", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/mlp/pred_actual_linefit.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Regression line demonstrates MLP's ability to capture the full range of gold prices accurately.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            columns="2",
+                            spacing="3",
+                            width="100%"
+                        ),
+                        
+                        spacing="3",
+                        align="start"
+                    ),
+                    padding="1.5em",
+                    background=rx.color("blue", 1),
+                    border="1px solid",
+                    border_color=rx.color("blue", 5),
+                    border_radius="var(--radius-4)"
+                ),
+                value="mlp"
+            ),
+            
+            # RNN Tab
+            rx.tabs.content(
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.icon("git-branch", size=24, color=rx.color("purple", 9)),
+                            rx.heading("RNN (Recurrent Neural Network) - R² = 0.600", size="4", weight="bold", color=rx.color("purple", 10)),
+                            spacing="2",
+                            align="center",
+                            margin_bottom="0.5em"
+                        ),
+                        rx.text(
+                            "Simple RNN struggles with vanishing gradients. Only sees past gold prices (window=12), lacks economic context.",
+                            size="2",
+                            color="var(--gray-11)",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.vstack(
+                            rx.heading("Training Loss", size="3", weight="bold", margin_bottom="0.5em"),
+                            rx.image(
+                                src="/modeling_plots/rnn/training_loss.png",
+                                width="100%",
+                                border_radius="var(--radius-3)",
+                                border="1px solid",
+                                border_color=rx.color("gray", 5)
+                            ),
+                            rx.text(
+                                "RNN struggles with vanishing gradients - loss plateaus early. Limited capacity to capture long-term dependencies.",
+                                size="2",
+                                color="var(--gray-11)",
+                                text_align="center",
+                                margin_top="0.5em"
+                            ),
+                            spacing="2",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.grid(
+                            rx.vstack(
+                                rx.heading("Predictions vs Actual", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/rnn/pred_actual.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Wide scatter indicates poor fit (R² = 0.600). RNN fails to capture gold's complex dynamics from price history alone.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            rx.vstack(
+                                rx.heading("Linear Fit Analysis", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/rnn/pred_actual_linefit.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Regression line deviates significantly from ideal y=x, confirming systematic prediction errors.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            columns="2",
+                            spacing="3",
+                            width="100%"
+                        ),
+                        
+                        spacing="3",
+                        align="start"
+                    ),
+                    padding="1.5em",
+                    background=rx.color("purple", 1),
+                    border="1px solid",
+                    border_color=rx.color("purple", 5),
+                    border_radius="var(--radius-4)"
+                ),
+                value="rnn"
+            ),
+            
+            # LSTM Tab
+            rx.tabs.content(
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.icon("boxes", size=24, color=rx.color("green", 9)),
+                            rx.heading("LSTM (Long Short-Term Memory) - R² = 0.603", size="4", weight="bold", color=rx.color("green", 10)),
+                            spacing="2",
+                            align="center",
+                            margin_bottom="0.5em"
+                        ),
+                        rx.text(
+                            "LSTM's 3-gate architecture (input, forget, output) shows marginal improvement over RNN but still struggles without economic features.",
+                            size="2",
+                            color="var(--gray-11)",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.vstack(
+                            rx.heading("Training Loss", size="3", weight="bold", margin_bottom="0.5em"),
+                            rx.image(
+                                src="/modeling_plots/lstm/training_loss.png",
+                                width="100%",
+                                border_radius="var(--radius-3)",
+                                border="1px solid",
+                                border_color=rx.color("gray", 5)
+                            ),
+                            rx.text(
+                                "LSTM's gating mechanisms show slightly better convergence than RNN, but still struggles without economic features (R² = 0.603).",
+                                size="2",
+                                color="var(--gray-11)",
+                                text_align="center",
+                                margin_top="0.5em"
+                            ),
+                            spacing="2",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.grid(
+                            rx.vstack(
+                                rx.heading("Predictions vs Actual", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/lstm/pred_actual.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "LSTM performs marginally better than RNN but still shows significant prediction errors without multivariate features.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            rx.vstack(
+                                rx.heading("Linear Fit Analysis", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/lstm/pred_actual_linefit.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Gates help with memory but cannot compensate for missing economic context. Fit remains poor.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            columns="2",
+                            spacing="3",
+                            width="100%"
+                        ),
+                        
+                        spacing="3",
+                        align="start"
+                    ),
+                    padding="1.5em",
+                    background=rx.color("green", 1),
+                    border="1px solid",
+                    border_color=rx.color("green", 5),
+                    border_radius="var(--radius-4)"
+                ),
+                value="lstm"
+            ),
+            
+            # GRU Tab
+            rx.tabs.content(
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.icon("circuit-board", size=24, color=rx.color("amber", 9)),
+                            rx.heading("GRU (Gated Recurrent Unit) - R² = 0.843", size="4", weight="bold", color=rx.color("amber", 10)),
+                            spacing="2",
+                            align="center",
+                            margin_bottom="0.5em"
+                        ),
+                        rx.text(
+                            "Best univariate recurrent model! GRU's simplified 2-gate design (reset + update) proves more effective than LSTM for limited data.",
+                            size="2",
+                            color="var(--gray-11)",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.vstack(
+                            rx.heading("Training Loss", size="3", weight="bold", margin_bottom="0.5em"),
+                            rx.image(
+                                src="/modeling_plots/gru/training_loss.png",
+                                width="100%",
+                                border_radius="var(--radius-3)",
+                                border="1px solid",
+                                border_color=rx.color("gray", 5)
+                            ),
+                            rx.text(
+                                "GRU achieves best univariate performance (R² = 0.843) with efficient 2-gate architecture. Simpler than LSTM but more effective for limited data.",
+                                size="2",
+                                color="var(--gray-11)",
+                                text_align="center",
+                                margin_top="0.5em"
+                            ),
+                            spacing="2",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.grid(
+                            rx.vstack(
+                                rx.heading("Predictions vs Actual", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/gru/pred_actual.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Tighter cluster than RNN/LSTM, showing GRU's superior ability to learn temporal patterns from univariate gold prices.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            rx.vstack(
+                                rx.heading("Linear Fit Analysis", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/gru/pred_actual_linefit.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Best univariate recurrent model, but still limited without economic features. Sets stage for multivariate improvements.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            columns="2",
+                            spacing="3",
+                            width="100%"
+                        ),
+                        
+                        spacing="3",
+                        align="start"
+                    ),
+                    padding="1.5em",
+                    background=rx.color("amber", 1),
+                    border="1px solid",
+                    border_color=rx.color("amber", 5),
+                    border_radius="var(--radius-4)"
+                ),
+                value="gru"
+            ),
+            
+            default_value="mlp",
+            width="100%"
         ),
         
         spacing="3",
@@ -2553,7 +2947,308 @@ def deep_learning_multivariate() -> rx.Component:
             margin_y="1.5em"
         ),
         
+        # Multivariate Model Visualizations - Tabbed Interface
+        rx.heading("Training & Performance Visualizations", size="5", weight="bold", margin_bottom="1em", margin_top="1em"),
+        
+        rx.tabs.root(
+            rx.tabs.list(
+                rx.tabs.trigger("RNN", value="rnn_multi"),
+                rx.tabs.trigger("LSTM", value="lstm_multi"),
+                rx.tabs.trigger("GRU 🏆", value="gru_multi"),
+            ),
+            
+            # RNN Multivariate Tab
+            rx.tabs.content(
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.icon("git-branch", size=24, color=rx.color("purple", 9)),
+                            rx.heading("RNN Multivariate - R² = 0.972", size="4", weight="bold", color=rx.color("purple", 10)),
+                            spacing="2",
+                            align="center",
+                            margin_bottom="0.5em"
+                        ),
+                        rx.text(
+                            "RNN dramatically improves from R² = 0.600 (univariate) to 0.972 (multivariate) with economic features. MAE drops from $184 to $59.",
+                            size="2",
+                            color="var(--gray-11)",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.vstack(
+                            rx.heading("Training Loss", size="3", weight="bold", margin_bottom="0.5em"),
+                            rx.image(
+                                src="/modeling_plots/rnn_multivariate/training_loss.png",
+                                width="100%",
+                                border_radius="var(--radius-3)",
+                                border="1px solid",
+                                border_color=rx.color("gray", 5)
+                            ),
+                            rx.text(
+                                "Economic features stabilize training and reduce vanishing gradient issues. Convergence is much smoother than univariate RNN.",
+                                size="2",
+                                color="var(--gray-11)",
+                                text_align="center",
+                                margin_top="0.5em"
+                            ),
+                            spacing="2",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.grid(
+                            rx.vstack(
+                                rx.heading("Predictions vs Actual", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/rnn_multivariate/pred_actual.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Much tighter cluster than univariate RNN. Multivariate features enable RNN to capture complex gold dynamics.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            rx.vstack(
+                                rx.heading("Linear Fit Analysis", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/rnn_multivariate/pred_actual_linefit.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Strong linear relationship demonstrates RNN's improved prediction accuracy with economic context (MAE = $58.99).",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            columns="2",
+                            spacing="3",
+                            width="100%"
+                        ),
+                        
+                        spacing="3",
+                        align="start"
+                    ),
+                    padding="1.5em",
+                    background=rx.color("purple", 1),
+                    border="1px solid",
+                    border_color=rx.color("purple", 5),
+                    border_radius="var(--radius-4)"
+                ),
+                value="rnn_multi"
+            ),
+            
+            # LSTM Multivariate Tab
+            rx.tabs.content(
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.icon("boxes", size=24, color=rx.color("green", 9)),
+                            rx.heading("LSTM Multivariate - R² = 0.990", size="4", weight="bold", color=rx.color("green", 10)),
+                            spacing="2",
+                            align="center",
+                            margin_bottom="0.5em"
+                        ),
+                        rx.text(
+                            "LSTM achieves near-optimal performance (R² = 0.990, MAE = $37.84). Three-gate architecture excels at managing long-term dependencies across 13 features.",
+                            size="2",
+                            color="var(--gray-11)",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.vstack(
+                            rx.heading("Training Loss", size="3", weight="bold", margin_bottom="0.5em"),
+                            rx.image(
+                                src="/modeling_plots/lstm_multivariate/training_loss.png",
+                                width="100%",
+                                border_radius="var(--radius-3)",
+                                border="1px solid",
+                                border_color=rx.color("gray", 5)
+                            ),
+                            rx.text(
+                                "Smooth convergence with excellent validation performance. LSTM's memory cells effectively integrate economic signals over time.",
+                                size="2",
+                                color="var(--gray-11)",
+                                text_align="center",
+                                margin_top="0.5em"
+                            ),
+                            spacing="2",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.grid(
+                            rx.vstack(
+                                rx.heading("Predictions vs Actual", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/lstm_multivariate/pred_actual.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Extremely tight scatter along diagonal - LSTM captures gold price variations with exceptional accuracy (MAE = $37.84).",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            rx.vstack(
+                                rx.heading("Linear Fit Analysis", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/lstm_multivariate/pred_actual_linefit.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="1px solid",
+                                    border_color=rx.color("gray", 5)
+                                ),
+                                rx.text(
+                                    "Near-perfect alignment with y=x ideal line. LSTM's gates (input, forget, output) manage complex feature interactions.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            columns="2",
+                            spacing="3",
+                            width="100%"
+                        ),
+                        
+                        spacing="3",
+                        align="start"
+                    ),
+                    padding="1.5em",
+                    background=rx.color("green", 1),
+                    border="1px solid",
+                    border_color=rx.color("green", 5),
+                    border_radius="var(--radius-4)"
+                ),
+                value="lstm_multi"
+            ),
+            
+            # GRU Multivariate Tab (CHAMPION!)
+            rx.tabs.content(
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.icon("trophy", size=28, color=rx.color("amber", 9)),
+                            rx.heading("GRU Multivariate - CHAMPION (R² = 0.990)", size="4", weight="bold", color=rx.color("amber", 10)),
+                            spacing="2",
+                            align="center",
+                            margin_bottom="0.5em"
+                        ),
+                        rx.text(
+                            rx.text.strong("Best overall model! "),
+                            "R² = 0.990, MAE = $34.94 (lowest error of all models). GRU's 2-gate architecture achieves optimal balance: complex enough to excel, efficient enough to train ~20% faster than LSTM.",
+                            size="2",
+                            color="var(--gray-11)",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.vstack(
+                            rx.heading("Training Loss", size="3", weight="bold", margin_bottom="0.5em"),
+                            rx.image(
+                                src="/modeling_plots/gru_multivariate/training_loss.png",
+                                width="100%",
+                                border_radius="var(--radius-3)",
+                                border="2px solid",
+                                border_color=rx.color("amber", 6)
+                            ),
+                            rx.text(
+                                rx.text.strong("Optimal training efficiency. "),
+                                "GRU's simplified design (reset + update gates) converges smoothly while capturing all essential temporal patterns.",
+                                size="2",
+                                color="var(--gray-11)",
+                                text_align="center",
+                                margin_top="0.5em"
+                            ),
+                            spacing="2",
+                            margin_bottom="1em"
+                        ),
+                        
+                        rx.grid(
+                            rx.vstack(
+                                rx.heading("Predictions vs Actual", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/gru_multivariate/pred_actual.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="2px solid",
+                                    border_color=rx.color("amber", 6)
+                                ),
+                                rx.text(
+                                    rx.text.strong("Tightest cluster of all models! "),
+                                    "Lowest MAE ($34.94) demonstrates GRU's superior generalization across all price ranges.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            rx.vstack(
+                                rx.heading("Linear Fit Analysis", size="3", weight="bold", margin_bottom="0.5em"),
+                                rx.image(
+                                    src="/modeling_plots/gru_multivariate/pred_actual_linefit.png",
+                                    width="100%",
+                                    border_radius="var(--radius-3)",
+                                    border="2px solid",
+                                    border_color=rx.color("amber", 6)
+                                ),
+                                rx.text(
+                                    rx.text.strong("Perfect regression line! "),
+                                    "GRU learned how CPI, interest rates, VIX, and 10 other features drive gold prices across the full historical range.",
+                                    size="2",
+                                    color="var(--gray-11)",
+                                    text_align="center",
+                                    margin_top="0.5em"
+                                ),
+                                spacing="2",
+                                align="start"
+                            ),
+                            columns="2",
+                            spacing="3",
+                            width="100%"
+                        ),
+                        
+                        spacing="3",
+                        align="start"
+                    ),
+                    padding="1.5em",
+                    background=rx.color("amber", 1),
+                    border="2px solid",
+                    border_color=rx.color("amber", 6),
+                    border_radius="var(--radius-4)"
+                ),
+                value="gru_multi"
+            ),
+            
+            default_value="gru_multi",
+            width="100%"
+        ),
+        
         rx.box(
+
             rx.vstack(
                 rx.hstack(
                     rx.icon("zap", size=24, color=rx.color("amber", 9)),
