@@ -1376,6 +1376,307 @@ def polynomial_regression_section() -> rx.Component:
     )
 
 
+def ridge_regression_detail() -> rx.Component:
+    """Ridge Regression - L2 Regularization for multicollinearity."""
+    
+    # Metrics comparison data
+    metrics_data = [
+        ["Linear Regression", "0.947", "0.947", "13424.29", "115.88", "77.06"],
+        ["Ridge Regression", "0.947", "0.947", "13424.29", "115.88", "77.06"]
+    ]
+    
+    # Coefficients comparison data
+    coef_data = [
+        ["CPI", "85.55", "73.56"],
+        ["Silver_Futures", "50.15", "49.39"],
+        ["S&P_500", "0.15", "0.14"],
+        ["VIX", "-11.22", "-11.28"],
+        ["Crude_Oil", "6.95", "6.71"],
+        ["GPR", "1.42", "1.39"],
+        ["GPRA", "0.52", "0.55"],
+        ["USD_Index", "-24.03", "-20.73"],
+        ["Unemployment", "94.89", "89.41"],
+        ["Treasury_Yield", "-52.38", "-8.13"],
+        ["Real_Interest_Rate", "24.05", "-5.09"],
+        ["Fed_Funds_Rate", "5.12", "-4.88"]
+    ]
+    
+    return rx.vstack(
+        rx.heading("Ridge Regression: L2 Regularization Test", size="6", weight="bold", margin_bottom="1em"),
+        
+        rx.text(
+            "With severe multicollinearity detected (VIF > 100 for CPI, USD Index, Treasury Yield), "
+            "we tested ",
+            rx.text.strong("Ridge Regression (L2 regularization)"),
+            " to stabilize coefficient estimates. Ridge penalizes large coefficients, ",
+            rx.text.strong("shrinking correlated features toward zero"),
+            " while preserving predictive performance.",
+            size="4",
+            color="var(--gray-12)",
+            line_height="1.7",
+            margin_bottom="1em"
+        ),
+        
+        # Metrics Comparison Table
+        rx.box(
+            rx.vstack(
+                rx.heading("Performance Comparison: Linear vs Ridge", size="5", weight="bold", margin_bottom="1em"),
+                
+                rx.table.root(
+                    rx.table.header(
+                        rx.table.row(
+                            rx.table.column_header_cell("Model"),
+                            rx.table.column_header_cell("R²"),
+                            rx.table.column_header_cell("Adj R²"),
+                            rx.table.column_header_cell("MSE"),
+                            rx.table.column_header_cell("RMSE"),
+                            rx.table.column_header_cell("MAE"),
+                        )
+                    ),
+                    rx.table.body(
+                        *[
+                            rx.table.row(
+                                rx.table.cell(row[0]),
+                                rx.table.cell(rx.badge(row[1], color_scheme="green", size="2")),
+                                rx.table.cell(rx.badge(row[2], color_scheme="green", size="2")),
+                                rx.table.cell(row[3]),
+                                rx.table.cell(row[4]),
+                                rx.table.cell(row[5]),
+                            )
+                            for row in metrics_data
+                        ]
+                    ),
+                    variant="surface",
+                    size="3",
+                    width="100%",
+                    margin_bottom="1em"
+                ),
+                
+                rx.text(
+                    rx.text.strong("Observation: "),
+                    "Ridge produces ",
+                    rx.text.strong("identical metrics"),
+                    " to OLS Linear Regression (R² = 0.947, RMSE = $115.88). "
+                    "This indicates that while multicollinearity exists in the data, ",
+                    rx.text.strong("it does not degrade predictive performance"),
+                    ". "
+                    "The regularization constraint had no impact on test set predictions.",
+                    size="3",
+                    color="var(--gray-11)",
+                    line_height="1.6",
+                    margin_top="0.5em"
+                ),
+                
+                spacing="2",
+                align="start"
+            ),
+            padding="1.5em",
+            background=rx.color("gray", 1),
+            border="1px solid",
+            border_color=rx.color("gray", 5),
+            border_radius="var(--radius-4)",
+            margin_bottom="1.5em"
+        ),
+        
+        # Coefficients Comparison Table
+        rx.box(
+            rx.vstack(
+                rx.heading("Coefficient Comparison: Regularization Effects", size="5", weight="bold", margin_bottom="1em"),
+                
+                rx.table.root(
+                    rx.table.header(
+                        rx.table.row(
+                            rx.table.column_header_cell("Feature"),
+                            rx.table.column_header_cell("Linear Coefficient"),
+                            rx.table.column_header_cell("Ridge Coefficient"),
+                        )
+                    ),
+                    rx.table.body(
+                        # CPI - moderate shrinkage
+                        rx.table.row(
+                            rx.table.cell("CPI"),
+                            rx.table.cell("85.55"),
+                            rx.table.cell(rx.text("73.56", color=rx.color("blue", 11))),
+                            style={"background": rx.color("blue", 1)}
+                        ),
+                        # Silver - stable (best predictor)
+                        rx.table.row(
+                            rx.table.cell("Silver_Futures"),
+                            rx.table.cell("50.15"),
+                            rx.table.cell(rx.text("49.39", color=rx.color("green", 11))),
+                            style={"background": rx.color("green", 1)}
+                        ),
+                        # S&P 500 - stable
+                        rx.table.row(
+                            rx.table.cell("S&P_500"),
+                            rx.table.cell("0.15"),
+                            rx.table.cell(rx.text("0.14", color=rx.color("green", 11))),
+                        ),
+                        # VIX - stable
+                        rx.table.row(
+                            rx.table.cell("VIX"),
+                            rx.table.cell("-11.22"),
+                            rx.table.cell(rx.text("-11.28", color=rx.color("green", 11))),
+                        ),
+                        # Crude Oil - stable
+                        rx.table.row(
+                            rx.table.cell("Crude_Oil"),
+                            rx.table.cell("6.95"),
+                            rx.table.cell(rx.text("6.71", color=rx.color("green", 11))),
+                        ),
+                        # GPR - stable
+                        rx.table.row(
+                            rx.table.cell("GPR"),
+                            rx.table.cell("1.42"),
+                            rx.table.cell(rx.text("1.39", color=rx.color("green", 11))),
+                        ),
+                        # GPRA - stable
+                        rx.table.row(
+                            rx.table.cell("GPRA"),
+                            rx.table.cell("0.52"),
+                            rx.table.cell(rx.text("0.55", color=rx.color("green", 11))),
+                        ),
+                        # USD Index - moderate shrinkage
+                        rx.table.row(
+                            rx.table.cell("USD_Index"),
+                            rx.table.cell("-24.03"),
+                            rx.table.cell(rx.text("-20.73", color=rx.color("blue", 11))),
+                            style={"background": rx.color("blue", 1)}
+                        ),
+                        # Unemployment - moderate shrinkage
+                        rx.table.row(
+                            rx.table.cell("Unemployment"),
+                            rx.table.cell("94.89"),
+                            rx.table.cell(rx.text("89.41", color=rx.color("blue", 11))),
+                            style={"background": rx.color("blue", 1)}
+                        ),
+                        # Treasury Yield - SEVERE shrinkage (VIF=179)
+                        rx.table.row(
+                            rx.table.cell("Treasury_Yield"),
+                            rx.table.cell(rx.text("−52.38", weight="bold")),
+                            rx.table.cell(rx.text("−8.13", color=rx.color("red", 11), weight="bold")),
+                            style={"background": rx.color("red", 2)}
+                        ),
+                        # Real Interest Rate - SIGN FLIP (VIF=30.81)
+                        rx.table.row(
+                            rx.table.cell("Real_Interest_Rate"),
+                            rx.table.cell(rx.text("24.05", weight="bold")),
+                            rx.table.cell(rx.text("−5.09", color=rx.color("red", 11), weight="bold")),
+                            style={"background": rx.color("red", 2)}
+                        ),
+                        # Fed Funds Rate - SIGN FLIP
+                        rx.table.row(
+                            rx.table.cell("Fed_Funds_Rate"),
+                            rx.table.cell(rx.text("5.12", weight="bold")),
+                            rx.table.cell(rx.text("−4.88", color=rx.color("red", 11), weight="bold")),
+                            style={"background": rx.color("red", 2)}
+                        ),
+                    ),
+                    variant="surface",
+                    size="3",
+                    width="100%",
+                    margin_bottom="1em"
+                ),
+                
+                rx.vstack(
+                    rx.hstack(
+                        rx.icon("lightbulb", size=20, color=rx.color("purple", 9)),
+                        rx.heading("Coefficient Interpretation", size="4", weight="bold"),
+                        spacing="2",
+                        align="center",
+                        margin_bottom="0.5em"
+                    ),
+                    rx.unordered_list(
+                        rx.list_item(
+                            rx.text.strong("Stable coefficients (green): "),
+                            "Silver, S&P 500, VIX, Crude Oil, GPR, GPRA remain nearly unchanged. These features have low multicollinearity and represent ",
+                            rx.text.strong("genuine independent signals"),
+                            "."
+                        ),
+                        rx.list_item(
+                            rx.text.strong("Moderate shrinkage (blue): "),
+                            "CPI (85.55→73.56), USD Index (-24.03→-20.73), Unemployment (94.89→89.41) show ~10-15% reduction. These features have moderate correlation but still contribute unique information."
+                        ),
+                        rx.list_item(
+                            rx.text.strong("Severe shrinkage (red): "),
+                            rx.text.strong("Treasury Yield collapses from -52.38 to -8.13 (84% reduction)"),
+                            " due to extreme multicollinearity (VIF=179.92). The large coefficient in OLS was inflated by correlation with CPI/USD/Real Interest Rate."
+                        ),
+                        rx.list_item(
+                            rx.text.strong("Sign flips (red): "),
+                            "Real Interest Rate (24.05→-5.09) and Fed Funds Rate (5.12→-4.88) ",
+                            rx.text.strong("reverse direction"),
+                            " under regularization. This indicates coefficients were unstable due to multicollinearity - the features share overlapping information with correlated variables."
+                        ),
+                        spacing="2",
+                        padding_left="1.5em"
+                    ),
+                    spacing="2",
+                    align="start"
+                ),
+                
+                spacing="3",
+                align="start"
+            ),
+            padding="1.5em",
+            background=rx.color("purple", 1),
+            border="1px solid",
+            border_color=rx.color("purple", 5),
+            border_radius="var(--radius-4)",
+            margin_bottom="1.5em"
+        ),
+        
+        # Final Verdict
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.icon("info", size=24, color=rx.color("cyan", 9)),
+                    rx.heading("Decision: Retain Linear Regression", size="4", weight="bold"),
+                    spacing="2",
+                    align="center",
+                    margin_bottom="0.5em"
+                ),
+                rx.text(
+                    "Despite severe multicollinearity, ",
+                    rx.text.strong("Ridge regularization provides no predictive benefit"),
+                    " (identical R² and RMSE). The coefficient instability (sign flips, shrinkage) confirms multicollinearity exists, but ",
+                    rx.text.strong("it does not harm generalization performance"),
+                    ". "
+                    "This occurs because correlated features (CPI, USD Index, Treasury Yield, Real Interest Rate) capture ",
+                    rx.text.strong("genuine economic relationships"),
+                    " - their correlation reflects reality, not noise. "
+                    "Removing features would sacrifice information without improving predictions.",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.7",
+                    margin_bottom="1em"
+                ),
+                rx.text(
+                    rx.text.strong("Modeling decision: "),
+                    "We retain all 12 features in standard Linear Regression. "
+                    "The multicollinearity reflects the interconnected nature of macroeconomic variables (e.g., inflation drives both CPI and interest rates). "
+                    "Regularization shrinks coefficients but does not improve out-of-sample accuracy.",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.7"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.25em",
+            background=rx.color("cyan", 2),
+            border_left=f"4px solid {rx.color('cyan', 9)}",
+            border_radius="var(--radius-3)",
+            margin_top="1em"
+        ),
+        
+        spacing="3",
+        align="start",
+        width="100%",
+        margin_bottom="2em"
+    )
+
+
 def time_series_section() -> rx.Component:
     """ARIMA/SARIMA with detailed parameter explanations."""
     return rx.vstack(
@@ -1574,7 +1875,7 @@ def time_series_section() -> rx.Component:
                     border_color=rx.color("gray", 5)
                 ),
                 rx.text(
-                    "Train series (blue) shows historical patterns. ARIMA forecast (green) diverges from actual test values (orange), "
+                    "Train series (blue) shows historical patterns. SARIMA forecast (green) diverges from actual test values (black), "
                     "demonstrating the model's inability to capture gold price movements driven by external economic factors.",
                     size="2",
                     color="var(--gray-11)",
@@ -1762,65 +2063,156 @@ def traditional_ml() -> rx.Component:
             margin_bottom="1em"
         ),
         
+        # SVR Section
+        rx.heading("Support Vector Regression (SVR)", size="5", weight="bold", margin_bottom="1em"),
+        rx.box(
+            rx.vstack(
+                rx.text(
+                    "Support Vector Regression with RBF kernel maps features into high-dimensional space, "
+                    "capturing complex non-linear patterns. GridSearchCV tested 27 combinations to find optimal hyperparameters.",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.6",
+                    margin_bottom="0.75em"
+                ),
+                rx.unordered_list(
+                    rx.list_item("Best C=100 (regularization strength)"),
+                    rx.list_item("Best gamma=0.01 (kernel coefficient)"),
+                    rx.list_item("Best epsilon=0.01 (margin tolerance)"),
+                    spacing="1",
+                    padding_left="1em"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.25em",
+            background=rx.color("blue", 1),
+            border="1px solid",
+            border_color=rx.color("blue", 5),
+            border_radius="var(--radius-3)",
+            margin_bottom="1.5em"
+        ),
+        
+        # SVR Visualizations
         rx.grid(
             rx.box(
                 rx.vstack(
-                    rx.heading("SVR: Support Vector Regression", size="4", weight="bold", margin_bottom="0.5em"),
-                    rx.text(
-                        "Support Vector Regression with RBF kernel maps features into high-dimensional space, "
-                        "capturing complex non-linear patterns. GridSearchCV tested 27 combinations to find optimal hyperparameters.",
-                        size="2",
-                        color="var(--gray-12)",
-                        line_height="1.6"
+                    rx.heading("SVR: Predicted vs Actual", size="4", weight="bold", margin_bottom="0.5em"),
+                    rx.image(
+                        src="/modeling_plots/svr/pred_vs_actual.png",
+                        width="100%",
+                        border_radius="var(--radius-3)",
+                        border="1px solid",
+                        border_color=rx.color("gray", 5)
                     ),
-                    rx.unordered_list(
-                        rx.list_item("Best C=100 (regularization strength)"),
-                        rx.list_item("Best gamma=0.01 (kernel coefficient)"),
-                        rx.list_item("Best epsilon=0.01 (margin tolerance)"),
-                        spacing="1",
-                        padding_left="1em"
+                    rx.text(
+                        "Tight clustering around diagonal line (y=x) demonstrates SVR's ability to capture non-linear patterns with R²=0.986.",
+                        size="2",
+                        color="var(--gray-11)",
+                        line_height="1.6",
+                        margin_top="0.5em"
                     ),
                     spacing="2",
                     align="start"
                 ),
                 padding="1.25em",
-                background=rx.color("blue", 1),
+                background=rx.color("gray", 1),
                 border="1px solid",
-                border_color=rx.color("blue", 5),
+                border_color=rx.color("gray", 5),
                 border_radius="var(--radius-3)"
             ),
             
             rx.box(
                 rx.vstack(
-                    rx.heading("Random Forest: Ensemble", size="4", weight="bold", margin_bottom="0.5em"),
-                    rx.text(
-                        "Random Forest trains 500 decision trees on random subsets of features, then averages predictions. "
-                        "This ensemble approach reduces overfitting while capturing non-linear patterns.",
-                        size="2",
-                        color="var(--gray-12)",
-                        line_height="1.6"
+                    rx.heading("SVR: Residual Distribution", size="4", weight="bold", margin_bottom="0.5em"),
+                    rx.image(
+                        src="/modeling_plots/svr/residuals_dist.png",
+                        width="100%",
+                        border_radius="var(--radius-3)",
+                        border="1px solid",
+                        border_color=rx.color("gray", 5)
                     ),
-                    rx.unordered_list(
-                        rx.list_item("500 estimators (trees)"),
-                        rx.list_item("Max depth = 20 layers"),
-                        rx.list_item("1,620 CV fits (5-fold x 324 configs)"),
-                        spacing="1",
-                        padding_left="1em"
+                    rx.text(
+                        "Residuals are approximately normal with small variance, confirming reliable model performance across price ranges.",
+                        size="2",
+                        color="var(--gray-11)",
+                        line_height="1.6",
+                        margin_top="0.5em"
                     ),
                     spacing="2",
                     align="start"
                 ),
                 padding="1.25em",
-                background=rx.color("green", 1),
+                background=rx.color("gray", 1),
                 border="1px solid",
-                border_color=rx.color("green", 5),
+                border_color=rx.color("gray", 5),
                 border_radius="var(--radius-3)"
             ),
             
             columns="2",
             spacing="3",
             width="100%",
-            margin_y="1em"
+            margin_bottom="2em"
+        ),
+        
+        # Random Forest Section
+        rx.heading("Random Forest", size="5", weight="bold", margin_bottom="1em"),
+        rx.box(
+            rx.vstack(
+                rx.text(
+                    "Random Forest trains 500 decision trees on random subsets of features, then averages predictions. "
+                    "This ensemble approach reduces overfitting while capturing non-linear patterns.",
+                    size="3",
+                    color="var(--gray-12)",
+                    line_height="1.6",
+                    margin_bottom="0.75em"
+                ),
+                rx.unordered_list(
+                    rx.list_item("500 estimators (trees)"),
+                    rx.list_item("Max depth = 20 layers"),
+                    rx.list_item("1,620 CV fits (5-fold x 324 configs)"),
+                    spacing="1",
+                    padding_left="1em"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.25em",
+            background=rx.color("green", 1),
+            border="1px solid",
+            border_color=rx.color("green", 5),
+            border_radius="var(--radius-3)",
+            margin_bottom="1.5em"
+        ),
+        
+        # Random Forest Feature Importance
+        rx.box(
+            rx.vstack(
+                rx.heading("Random Forest Feature Importance", size="4", weight="bold", margin_bottom="1em"),
+                rx.image(
+                    src="/modeling_plots/random_forest/feature_importance.png",
+                    width="100%",
+                    border_radius="var(--radius-3)",
+                    border="1px solid",
+                    border_color=rx.color("gray", 5)
+                ),
+                rx.text(
+                    "Top 3 features highlighted in gold: Silver Futures, CPI (inflation), and S&P 500. "
+                    "Tree-based models confirm macroeconomic drivers identified in univariate analysis.",
+                    size="2",
+                    color="var(--gray-11)",
+                    line_height="1.6",
+                    margin_top="0.5em"
+                ),
+                spacing="2",
+                align="start"
+            ),
+            padding="1.5em",
+            background=rx.color("gray", 1),
+            border="1px solid",
+            border_color=rx.color("gray", 5),
+            border_radius="var(--radius-4)",
+            margin_bottom="1.5em"
         ),
         
         rx.box(
@@ -1837,36 +2229,6 @@ def traditional_ml() -> rx.Component:
             padding="1.25em",
             background=rx.color("amber", 2),
             border_left=f"4px solid {rx.color('amber', 9)}",
-            border_radius="var(--radius-3)",
-            margin_bottom="1em"
-        ),
-        
-        rx.box(
-            rx.vstack(
-                rx.hstack(
-                    rx.icon("target", size=24, color=rx.color("green", 9)),
-                    rx.heading("Feature Importance from Random Forest", size="4", weight="bold"),
-                    spacing="2",
-                    align="center"
-                ),
-                rx.text(
-                    "Top 3 most important features: 1) CPI (inflation) - ",
-                    rx.text.strong("32% importance"),
-                    ", 2) Silver_Futures - ",
-                    rx.text.strong("18%"),
-                    ", 3) S&P_500 - ",
-                    rx.text.strong("15%"),
-                    ". This confirms our EDA findings: inflation and precious metals co-movement are the strongest drivers of gold prices.",
-                    size="3",
-                    color="var(--gray-12)",
-                    line_height="1.7"
-                ),
-                spacing="2",
-                align="start"
-            ),
-            padding="1.25em",
-            background=rx.color("green", 2),
-            border_left=f"4px solid {rx.color('green', 9)}",
             border_radius="var(--radius-3)"
         ),
         
@@ -2578,6 +2940,9 @@ def modeling_page() -> rx.Component:
                 section_divider(),
                 
                 multivariate_regression_detail(),
+                section_divider(),
+                
+                ridge_regression_detail(),
                 section_divider(),
                 
                 baseline_models(),
