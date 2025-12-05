@@ -301,7 +301,7 @@ def home_page() -> rx.Component:
                         flow_arrow("down"),
                         flow_box("Feature Engineering (VIF Analysis & Scaling)", "blue", "450px"),
                         flow_arrow("down"),
-                        flow_box("Final Multivariate Dataset", "blue", "450px"),
+                        flow_box("Multivariable Dataset (Ready to Train)", "blue", "450px"),
                         
                         spacing="2",
                         align="center"

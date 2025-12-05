@@ -167,7 +167,7 @@ def executive_summary() -> rx.Component:
                 rx.heading("What We'll Explore", size="5", weight="bold", margin_bottom="0.5em"),
                 rx.unordered_list(
                     rx.list_item(
-                        rx.text.strong("Univariate vs Multivariate: "),
+                        rx.text.strong("simple vs Multiple: "),
                         "Does each feature work alone, or do they need to work together?"
                     ),
                     rx.list_item(
@@ -376,9 +376,9 @@ def modeling_philosophy() -> rx.Component:
     )
 
 
-def univariate_regression_detail() -> rx.Component:
-    """Detailed univariate regression results."""
-    univariate_results = [
+def simple_regression_detail() -> rx.Component:
+    """Detailed simple regression results."""
+    simple_results = [
         ["CPI", "0.720", "$266.74", "$210.61", "Strongest single predictor"],
         ["S&P_500", "0.619", "$311.12", "$240.87", "Stock market correlation"],
         ["Silver_Futures", "0.526", "$346.97", "$274.55", "Precious metal co-movement"],
@@ -394,10 +394,10 @@ def univariate_regression_detail() -> rx.Component:
     ]
     
     return rx.vstack(
-        rx.heading("Univariate Linear Regression: Testing Each Feature", size="6", weight="bold", margin_bottom="1em"),
+        rx.heading("Simple Linear Regression: Testing Each Feature", size="6", weight="bold", margin_bottom="1em"),
         
         rx.text(
-            "Before building multivariate models, we tested each of the 13 features individually to understand "
+            "Before building Multiple models, we tested each of the 13 features individually to understand "
             "their standalone predictive power. This reveals which features have strong linear relationships with gold prices.",
             size="4",
             color="var(--gray-12)",
@@ -448,7 +448,7 @@ def univariate_regression_detail() -> rx.Component:
                                         "font_weight": "bold" if i < 3 else "normal"
                                     }
                                 )
-                                for i, row in enumerate(univariate_results)
+                                for i, row in enumerate(simple_results)
                             ]
                         ),
                         variant="surface",
@@ -469,7 +469,7 @@ def univariate_regression_detail() -> rx.Component:
                     rx.vstack(
                         rx.heading("Top 9 Features Performance", size="5", weight="bold", margin_bottom="1em"),
                         rx.image(
-                            src="/modeling_plots/univariate/top_9_polynomial.png",
+                            src="/modeling_plots/simple/top_9_polynomial.png",
                             width="100%",
                             border_radius="var(--radius-3)",
                             border="1px solid",
@@ -626,7 +626,7 @@ def univariate_regression_detail() -> rx.Component:
                                 ),
                                 rx.vstack(
                                     rx.text.strong("Crude Oil (R² = 0.001)", color=rx.color("red", 10)),
-                                    rx.text("Supply shocks create noise. Works better in multivariate context.", size="2", color="var(--gray-12)"),
+                                    rx.text("Supply shocks create noise. Works better in Multiple context.", size="2", color="var(--gray-12)"),
                                     align="start", spacing="1"
                                 ),
                                 rx.vstack(
@@ -636,7 +636,7 @@ def univariate_regression_detail() -> rx.Component:
                                 ),
                                 rx.vstack(
                                     rx.text.strong("Fed Funds (R² = -0.043)", color=rx.color("red", 10)),
-                                    rx.text("Multiple channels with lags. Needs multivariate context.", size="2", color="var(--gray-12)"),
+                                    rx.text("Multiple channels with lags. Needs Multiple context.", size="2", color="var(--gray-12)"),
                                     align="start", spacing="1"
                                 ),
                                 rx.vstack(
@@ -692,13 +692,13 @@ def univariate_regression_detail() -> rx.Component:
                         rx.vstack(
                             rx.hstack(
                                 rx.icon("lightbulb", size=24, color=rx.color("amber", 9)),
-                                rx.heading("Solution: Multivariate Models", size="4", weight="bold"),
+                                rx.heading("Solution: Multiple Models", size="4", weight="bold"),
                                 spacing="2",
                                 align="center",
                                 margin_bottom="0.5em"
                             ),
                             rx.text(
-                                "These 'weak' features become valuable in multivariate models through interactions. "
+                                "These 'weak' features become valuable in Multiple models through interactions. "
                                 "Example: Real Interest Rate (R² = 0.079 alone) + CPI + Fed Funds jointly capture "
                                 "the real cost of holding gold vs interest-bearing assets.",
                                 size="3",
@@ -733,10 +733,10 @@ def univariate_regression_detail() -> rx.Component:
     )
 
 
-def multivariate_regression_detail() -> rx.Component:
+def Multiple_regression_detail() -> rx.Component:
     """OLS regression with statistical details."""
     return rx.vstack(
-        rx.heading("Multivariate Linear Regression: Combining All Features", size="6", weight="bold", margin_bottom="1em"),
+        rx.heading("Multiple Linear Regression: Combining All Features", size="6", weight="bold", margin_bottom="1em"),
         
         rx.text(
             "Now we use all 13 features simultaneously. This allows the model to capture interactions between variables "
@@ -911,7 +911,7 @@ def multivariate_regression_detail() -> rx.Component:
                                 ),
                                 rx.list_item(
                                     rx.text.strong("7 non-significant features: "),
-                                    "VIX, interest rates, geopolitical indices (redundant in multivariate context)"
+                                    "VIX, interest rates, geopolitical indices (redundant in Multiple context)"
                                 ),
                                 spacing="2",
                                 padding_left="1.5em"
@@ -1088,7 +1088,7 @@ def multivariate_regression_detail() -> rx.Component:
                         rx.vstack(
                             rx.heading("Diagnostic Plots (3-Panel)", size="5", weight="bold", margin_bottom="1em"),
                             rx.image(
-                                src="/modeling_plots/multivariate/diagnostics_3panel.png",
+                                src="/modeling_plots/Multiple/diagnostics_3panel.png",
                                 width="100%",
                                 border_radius="var(--radius-3)",
                                 border="1px solid",
@@ -1290,7 +1290,7 @@ def polynomial_regression_section() -> rx.Component:
         rx.heading("Polynomial Regression: Testing Non-linear Curves", size="6", weight="bold", margin_bottom="1em"),
         
         rx.text(
-            "Can we improve univariate predictions by fitting curves instead of straight lines? "
+            "Can we improve simple predictions by fitting curves instead of straight lines? "
             "We tested polynomial regression (degree=2) on each feature to capture non-linear relationships.",
             size="4",
             color="var(--gray-12)",
@@ -1353,7 +1353,7 @@ def polynomial_regression_section() -> rx.Component:
                     ". Adding polynomial terms creates ",
                     rx.text.strong("overfitting risk"),
                     " without meaningful performance gain. ",
-                    rx.text.strong("Multivariate linear models remain the better path"),
+                    rx.text.strong("Multiple linear models remain the better path"),
                     ".",
                     size="3",
                     color="var(--gray-12)",
@@ -1852,7 +1852,7 @@ def time_series_section() -> rx.Component:
                     rx.text.strong("Historical patterns alone miss these fundamental drivers"),
                     ". This limitation provides a clear hypothesis: "
                     "we need ",
-                    rx.text.strong("multivariate models that can incorporate external economic data"),
+                    rx.text.strong("Multiple models that can incorporate external economic data"),
                     " to capture what truly drives gold prices.",
                     size="3",
                     color="var(--gray-12)",
@@ -1878,9 +1878,9 @@ def time_series_section() -> rx.Component:
 def baseline_models() -> rx.Component:
     """Baseline models comparison table."""
     baseline_data = [
-        ["Linear Regression", "0.947", "$115.88", "$77.06", "Strong multivariate baseline"],
+        ["Linear Regression", "0.947", "$115.88", "$77.06", "Strong Multiple baseline"],
         ["Ridge Regression", "0.947", "$115.88", "$77.06", "No improvement"],
-        ["Polynomial (degree=2)", "0.537", "$342.78", "$270.69", "Best univariate: Silver"],
+        ["Polynomial (degree=2)", "0.537", "$342.78", "$270.69", "Best simple: Silver"],
         ["ARIMA (1,1,1)", "-0.480", "$503.12", "$321.93", "Failed - worse than mean"],
         ["SARIMA (1,1,1)x(1,1,1,12)", "0.270", "$353.57", "$233.26", "Poor - weak seasonality"]
     ]
@@ -1939,15 +1939,15 @@ def baseline_models() -> rx.Component:
             rx.vstack(
                 rx.hstack(
                     rx.icon("circle-check", size=24, color=rx.color("green", 9)),
-                    rx.heading("Best Baseline: Multivariate Linear Regression", size="4", weight="bold"),
+                    rx.heading("Best Baseline: Multiple Linear Regression", size="4", weight="bold"),
                     spacing="2",
                     align="center",
                     margin_bottom="0.5em"
                 ),
                 rx.text(
                     rx.text.strong("R²=0.947"),
-                    " indicates 95% of gold price variance explained. The multivariate approach combining inflation, "
-                    "interest rates, stock market, and currency data substantially outperforms all univariate and time series methods. "
+                    " indicates 95% of gold price variance explained. The Multiple approach combining inflation, "
+                    "interest rates, stock market, and currency data substantially outperforms all simple and time series methods. "
                     "This demonstrates that gold prices are driven by macroeconomic interactions rather than single factors or historical patterns.",
                     size="3",
                     color="var(--gray-12)",
@@ -1974,7 +1974,7 @@ def traditional_ml() -> rx.Component:
     ml_data = [
         ["Support Vector Regression (SVR)", "0.986", "$59.93", "$43.77", "GridSearch: C=100, gamma=0.01"],
         ["Random Forest", "0.986", "$59.93", "$43.77", "500 trees, depth=20, 1620 CV fits"],
-        ["XGBoost", "0.973", "$82.67", "$51.11", "Underperformed - possible overfitting"]
+        ["XGBoost", "0.973", "$82.67", "$51.11", "Slightly underperformed than others"]
     ]
     
     return rx.vstack(
@@ -2139,7 +2139,7 @@ def traditional_ml() -> rx.Component:
                 ),
                 rx.text(
                     "Top 3 features highlighted in gold: Silver Futures, CPI (inflation), and S&P 500. "
-                    "Tree-based models confirm macroeconomic drivers identified in univariate analysis.",
+                    "Tree-based models confirm macroeconomic drivers identified in simple analysis.",
                     size="2",
                     color="var(--gray-11)",
                     line_height="1.6",
@@ -2180,18 +2180,18 @@ def traditional_ml() -> rx.Component:
     )
 
 
-def deep_learning_univariate() -> rx.Component:
-    """Deep learning univariate models."""
+def deep_learning_simple() -> rx.Component:
+    """Deep learning simple models."""
     dl_uni_data = [
         ["MLP (Feedforward)", "0.960", "$100.62", "$78.85", "256->128->64->32 neurons, Dropout"],
-        ["GRU (Univariate)", "0.843", "$164.93", "$122.95", "64->64 units, window=12"],
-        ["LSTM (Univariate)", "0.603", "$262.55", "$193.85", "64->64 units, gates struggle"],
-        ["RNN (Univariate)", "0.600", "$263.33", "$184.26", "Simple RNN insufficient"]
+        ["GRU (One - One)", "0.843", "$164.93", "$122.95", "64->64 units, window=12"],
+        ["LSTM (One - One)", "0.603", "$262.55", "$193.85", "64->64 units, gates struggle"],
+        ["RNN (One - One)", "0.600", "$263.33", "$184.26", "Simple RNN insufficient"]
     ]
     
     return rx.vstack(
         comparison_table_section(
-            "Deep Learning - Univariate (Gold Price Only)",
+            "Deep Learning - (One - One) (Gold Price Only)",
             "Before using all 13 features, we test if deep learning can extract temporal patterns from gold price history alone. "
             "MLP (feedforward) performs well as it uses all features but no sequence. "
             "Recurrent models (RNN/LSTM/GRU) use sliding windows of past prices but struggle without external features.",
@@ -2269,14 +2269,14 @@ def deep_learning_univariate() -> rx.Component:
             rx.vstack(
                 rx.hstack(
                     rx.icon("brain", size=24, color=rx.color("purple", 9)),
-                    rx.heading("Why MLP Outperforms RNN/LSTM/GRU (Univariate)?", size="4", weight="bold"),
+                    rx.heading("Why MLP Outperforms RNN/LSTM/GRU (simple)?", size="4", weight="bold"),
                     spacing="2",
                     align="center"
                 ),
                 rx.text(
                     "MLP uses ",
                     rx.text.strong("all 13 macroeconomic features"),
-                    " simultaneously (CPI, interest rates, S&P 500, etc.), while univariate RNN/LSTM/GRU "
+                    " simultaneously (CPI, interest rates, S&P 500, etc.), while simple RNN/LSTM/GRU "
                     "only see past gold prices. Without economic context, recurrent models struggle to predict sudden regime changes "
                     "(e.g., 2008 crisis, COVID-19). This proves gold isn't just autoregressive - it ",
                     rx.text.strong("needs external features"),
@@ -2313,8 +2313,8 @@ def deep_learning_univariate() -> rx.Component:
                     ") did better by using "
                     "simpler gating mechanisms (",
                     rx.text.strong("2 gates vs LSTM's 3"),
-                    "). With limited data (univariate), LSTM's complexity became a liability. "
-                    "But this changes dramatically with multivariate inputs...",
+                    "). With limited data (simple), LSTM's complexity became a liability. "
+                    "But this changes dramatically with Multiple inputs...",
                     size="3",
                     color="var(--gray-12)",
                     line_height="1.7"
@@ -2352,7 +2352,7 @@ def deep_learning_univariate() -> rx.Component:
                             margin_bottom="0.5em"
                         ),
                         rx.text(
-                            "Best univariate performer using all 13 features simultaneously (256→128→64→32 architecture with Dropout & BatchNorm).",
+                            "Best simple performer using all 13 features simultaneously (256→128→64→32 architecture with Dropout & BatchNorm).",
                             size="2",
                             color="var(--gray-11)",
                             margin_bottom="1em"
@@ -2579,7 +2579,7 @@ def deep_learning_univariate() -> rx.Component:
                                     border_color=rx.color("gray", 5)
                                 ),
                                 rx.text(
-                                    "LSTM performs marginally better than RNN but still shows significant prediction errors without multivariate features.",
+                                    "LSTM performs marginally better than RNN but still shows significant prediction errors without Multiple features.",
                                     size="2",
                                     color="var(--gray-11)",
                                     text_align="center",
@@ -2636,7 +2636,7 @@ def deep_learning_univariate() -> rx.Component:
                             margin_bottom="0.5em"
                         ),
                         rx.text(
-                            "Best univariate recurrent model! GRU's simplified 2-gate design (reset + update) proves more effective than LSTM for limited data.",
+                            "Best simple recurrent model! GRU's simplified 2-gate design (reset + update) proves more effective than LSTM for limited data.",
                             size="2",
                             color="var(--gray-11)",
                             margin_bottom="1em"
@@ -2652,7 +2652,7 @@ def deep_learning_univariate() -> rx.Component:
                                 border_color=rx.color("gray", 5)
                             ),
                             rx.text(
-                                "GRU achieves best univariate performance (R² = 0.843) with efficient 2-gate architecture. Simpler than LSTM but more effective for limited data.",
+                                "GRU achieves best simple performance (R² = 0.843) with efficient 2-gate architecture. Simpler than LSTM but more effective for limited data.",
                                 size="2",
                                 color="var(--gray-11)",
                                 text_align="center",
@@ -2673,7 +2673,7 @@ def deep_learning_univariate() -> rx.Component:
                                     border_color=rx.color("gray", 5)
                                 ),
                                 rx.text(
-                                    "Tighter cluster than RNN/LSTM, showing GRU's superior ability to learn temporal patterns from univariate gold prices.",
+                                    "Tighter cluster than RNN/LSTM, showing GRU's superior ability to learn temporal patterns from simple gold prices.",
                                     size="2",
                                     color="var(--gray-11)",
                                     text_align="center",
@@ -2692,7 +2692,7 @@ def deep_learning_univariate() -> rx.Component:
                                     border_color=rx.color("gray", 5)
                                 ),
                                 rx.text(
-                                    "Best univariate recurrent model, but still limited without economic features. Sets stage for multivariate improvements.",
+                                    "Best simple recurrent model, but still limited without economic features. Sets stage for Multiple improvements.",
                                     size="2",
                                     color="var(--gray-11)",
                                     text_align="center",
@@ -2729,12 +2729,12 @@ def deep_learning_univariate() -> rx.Component:
     )
 
 
-def deep_learning_multivariate() -> rx.Component:
-    """Deep learning multivariate models - achieving optimal performance."""
+def deep_learning_Multiple() -> rx.Component:
+    """Deep learning Multiple models - achieving optimal performance."""
     dl_multi_data = [
-        ["GRU (Multivariate)", "0.990", "$45.92", "$34.94", "Optimal balance of performance"],
-        ["LSTM (Multivariate)", "0.990", "$45.31", "$37.84", "Slightly lower MAE"],
-        ["RNN (Multivariate)", "0.972", "$76.77", "$58.99", "Good but simpler architecture limits"]
+        ["GRU (Many - One)", "0.990", "$45.92", "$34.94", "Optimal balance of performance"],
+        ["LSTM (Many - One)", "0.990", "$45.31", "$37.84", "Significant Improvement in MAE compare to LSTM(One - One)"],
+        ["RNN (Many - One)", "0.972", "$76.77", "$58.99", "Good but simpler architecture limits"]
     ]
     
     return rx.vstack(
@@ -2742,7 +2742,7 @@ def deep_learning_multivariate() -> rx.Component:
             rx.vstack(
                 rx.hstack(
                     rx.icon("zap", size=32, color=rx.color("purple", 9)),
-                    rx.heading("Deep Learning - Multivariate", size="6", weight="bold"),
+                    rx.heading("Deep Learning (Many - One)", size="6", weight="bold"),
                     spacing="2",
                     align="center"
                 ),
@@ -2752,7 +2752,7 @@ def deep_learning_multivariate() -> rx.Component:
                     ") with macroeconomic context (",
                     rx.text.strong("13 features"),
                     "), "
-                    "multivariate recurrent models achieve highly accurate predictive fit. "
+                    "(Many - One) recurrent models achieve highly accurate predictive fit. "
                     "GRU and LSTM both reach ",
                     rx.text.strong("R² = 0.990"),
                     ", reducing average error to just ",
@@ -2773,7 +2773,7 @@ def deep_learning_multivariate() -> rx.Component:
         ),
         
         comparison_table_section(
-            "Final Showdown: Multivariate Recurrent Models",
+            "Final Showdown: Multiple Recurrent Models",
             "These models see both time patterns AND economic drivers simultaneously. "
             "Each timestep contains all features, allowing the model to learn "
             "how gold responds to changing economic conditions over time.",
@@ -2800,7 +2800,7 @@ def deep_learning_multivariate() -> rx.Component:
         ),
         
         rx.grid(
-            metric_card("R² Improvement", "+0.147", "green", "vs RNN Univariate"),
+            metric_card("R² Improvement", "+0.147", "green", "vs RNN simple"),
             metric_card("Error Reduction", "-79%", "blue", "MAE: $184 -> $35"),
             metric_card("Training Time", "~5 min", "purple", "70 epochs with EarlyStopping"),
             metric_card("Parameters", "~50K", "amber", "128->64 GRU units"),
@@ -2812,7 +2812,7 @@ def deep_learning_multivariate() -> rx.Component:
         
         rx.box(
             rx.vstack(
-                rx.heading("GRU Multivariate", size="5", weight="bold", margin_bottom="1em"),
+                rx.heading("GRU Multiple", size="5", weight="bold", margin_bottom="1em"),
                 
                 rx.grid(
                     rx.vstack(
@@ -2888,7 +2888,7 @@ def deep_learning_multivariate() -> rx.Component:
             margin_y="1.5em"
         ),
         
-        # Multivariate Model Visualizations - Tabbed Interface
+        # Multiple Model Visualizations - Tabbed Interface
         rx.heading("Training & Performance Visualizations", size="5", weight="bold", margin_bottom="1em", margin_top="1em"),
         
         rx.tabs.root(
@@ -2898,19 +2898,19 @@ def deep_learning_multivariate() -> rx.Component:
                 rx.tabs.trigger("GRU 🏆", value="gru_multi"),
             ),
             
-            # RNN Multivariate Tab
+            # RNN Multiple Tab
             rx.tabs.content(
                 rx.box(
                     rx.vstack(
                         rx.hstack(
                             rx.icon("git-branch", size=24, color=rx.color("purple", 9)),
-                            rx.heading("RNN Multivariate - R² = 0.972", size="4", weight="bold", color=rx.color("purple", 10)),
+                            rx.heading("RNN Multiple - R² = 0.972", size="4", weight="bold", color=rx.color("purple", 10)),
                             spacing="2",
                             align="center",
                             margin_bottom="0.5em"
                         ),
                         rx.text(
-                            "RNN dramatically improves from R² = 0.600 (univariate) to 0.972 (multivariate) with economic features. MAE drops from $184 to $59.",
+                            "RNN dramatically improves from R² = 0.600 (simple) to 0.972 (Multiple) with economic features. MAE drops from $184 to $59.",
                             size="2",
                             color="var(--gray-11)",
                             margin_bottom="1em"
@@ -2926,7 +2926,7 @@ def deep_learning_multivariate() -> rx.Component:
                                 border_color=rx.color("gray", 5)
                             ),
                             rx.text(
-                                "Economic features stabilize training and reduce vanishing gradient issues. Convergence is much smoother than univariate RNN.",
+                                "Economic features stabilize training and reduce vanishing gradient issues. Convergence is much smoother than simple RNN.",
                                 size="2",
                                 color="var(--gray-11)",
                                 text_align="center",
@@ -2947,7 +2947,7 @@ def deep_learning_multivariate() -> rx.Component:
                                     border_color=rx.color("gray", 5)
                                 ),
                                 rx.text(
-                                    "Much tighter cluster than univariate RNN. Multivariate features enable RNN to capture complex gold dynamics.",
+                                    "Much tighter cluster than simple RNN. Multiple features enable RNN to capture complex gold dynamics.",
                                     size="2",
                                     color="var(--gray-11)",
                                     text_align="center",
@@ -2992,13 +2992,13 @@ def deep_learning_multivariate() -> rx.Component:
                 value="rnn_multi"
             ),
             
-            # LSTM Multivariate Tab
+            # LSTM Multiple Tab
             rx.tabs.content(
                 rx.box(
                     rx.vstack(
                         rx.hstack(
                             rx.icon("boxes", size=24, color=rx.color("green", 9)),
-                            rx.heading("LSTM Multivariate - R² = 0.990", size="4", weight="bold", color=rx.color("green", 10)),
+                            rx.heading("LSTM Multiple - R² = 0.990", size="4", weight="bold", color=rx.color("green", 10)),
                             spacing="2",
                             align="center",
                             margin_bottom="0.5em"
@@ -3086,13 +3086,13 @@ def deep_learning_multivariate() -> rx.Component:
                 value="lstm_multi"
             ),
             
-            # GRU Multivariate Tab (CHAMPION!)
+            # GRU Multiple Tab (CHAMPION!)
             rx.tabs.content(
                 rx.box(
                     rx.vstack(
                         rx.hstack(
                             rx.icon("trophy", size=28, color=rx.color("amber", 9)),
-                            rx.heading("GRU Multivariate - CHAMPION (R² = 0.990)", size="4", weight="bold", color=rx.color("amber", 10)),
+                            rx.heading("GRU Multiple - CHAMPION (R² = 0.990)", size="4", weight="bold", color=rx.color("amber", 10)),
                             spacing="2",
                             align="center",
                             margin_bottom="0.5em"
@@ -3230,12 +3230,12 @@ def deep_learning_multivariate() -> rx.Component:
             rx.vstack(
                 rx.hstack(
                     rx.icon("trending-up", size=24, color=rx.color("green", 9)),
-                    rx.heading("The Multivariate Advantage", size="4", weight="bold"),
+                    rx.heading("The Multiple Advantage", size="4", weight="bold"),
                     spacing="2",
                     align="center"
                 ),
                 rx.text(
-                    "Comparing univariate vs multivariate GRU: R² jumped from ",
+                    "Comparing simple vs Multiple GRU: R² jumped from ",
                     rx.text.strong("0.843 → 0.990"),
                     " (",
                     rx.text.strong("+0.147"),
@@ -3271,18 +3271,18 @@ def deep_learning_multivariate() -> rx.Component:
 def grand_comparison() -> rx.Component:
     """Final comparison of all models."""
     all_models_data = [
-        ["GRU Multivariate", "0.990", "$45.92", "$34.94", "Top performer - best overall"],
-        ["LSTM Multivariate", "0.990", "$45.31", "$37.84", "Nearly tied with GRU"],
+        ["GRU Multiple", "0.990", "$45.92", "$34.94", "Top performer - best overall"],
+        ["LSTM Multiple", "0.990", "$45.31", "$37.84", "Nearly tied with GRU"],
         ["SVR (RBF Kernel)", "0.986", "$59.93", "$43.77", "Best traditional ML"],
         ["Random Forest", "0.986", "$59.93", "$43.77", "Tied with SVR"],
         ["XGBoost", "0.973", "$82.67", "$51.11", "Gradient boosting"],
-        ["RNN Multivariate", "0.972", "$76.77", "$58.99", "Good but simpler"],
+        ["RNN Multiple", "0.972", "$76.77", "$58.99", "Good but simpler"],
         ["MLP", "0.960", "$100.62", "$78.85", "Feedforward baseline"],
         ["Linear Regression", "0.947", "$115.88", "$77.06", "Strong baseline"],
         ["Ridge Regression", "0.947", "$115.88", "$77.06", "No improvement"],
-        ["GRU Univariate", "0.843", "$164.93", "$122.95", "Needs features"],
-        ["LSTM Univariate", "0.603", "$262.55", "$193.85", "Insufficient"],
-        ["RNN Univariate", "0.600", "$263.33", "$184.26", "Insufficient"],
+        ["GRU simple", "0.843", "$164.93", "$122.95", "Needs features"],
+        ["LSTM simple", "0.603", "$262.55", "$193.85", "Insufficient"],
+        ["RNN simple", "0.600", "$263.33", "$184.26", "Insufficient"],
         ["SARIMA", "0.270", "$353.57", "$233.26", "Time series weak"],
         ["ARIMA", "-0.480", "$503.12", "$321.93", "Failed completely"]
     ]
@@ -3296,7 +3296,7 @@ def grand_comparison() -> rx.Component:
             " tested, sorted by R². "
             "The progression from baseline to deep learning shows a clear trend: "
             "complexity pays off when combined with ",
-            rx.text.strong("rich multivariate features"),
+            rx.text.strong("rich Multiple features"),
             " and ",
             rx.text.strong("temporal modeling"),
             ".",
@@ -3348,10 +3348,10 @@ def key_takeaways() -> rx.Component:
         
         rx.accordion.root(
             rx.accordion.item(
-                header="1. Multivariate Deep Learning Achieves Optimal Performance",
+                header="1. Multiple Deep Learning Achieves Optimal Performance",
                 content=rx.text(
                     "The combination of temporal modeling (RNN/LSTM/GRU) with rich macroeconomic features (CPI, interest rates, market indices) "
-                    "produces the best results. GRU Multivariate achieved R²=0.990 with MAE=$34.94, outperforming all other approaches. "
+                    "produces the best results. GRU Multiple achieved R²=0.990 with MAE=$34.94, outperforming all other approaches. "
                     "This validates our hypothesis that gold prices are driven by economic fundamentals rather than momentum alone.",
                     size="3",
                     line_height="1.7"
@@ -3370,7 +3370,7 @@ def key_takeaways() -> rx.Component:
             rx.accordion.item(
                 header="3. Feature Engineering > Model Complexity",
                 content=rx.text(
-                    "Univariate models (even sophisticated LSTM) failed (R²=0.60), while simple Linear Regression with good features achieved R²=0.947. "
+                    "simple models (even sophisticated LSTM) failed (R²=0.60), while simple Linear Regression with good features achieved R²=0.947. "
                     "This proves that feature selection (Chapter 2's work removing multicollinearity, selecting 13 key variables) was more impactful "
                     "than choosing fancy algorithms. Garbage in, garbage out applies even to neural networks!",
                     size="3",
@@ -3465,7 +3465,7 @@ def whats_next() -> rx.Component:
             
             rx.text(
                 "Based on comprehensive evaluation, ",
-                rx.text.strong("GRU Multivariate"),
+                rx.text.strong("GRU Multiple"),
                 " emerges as the optimal model with ",
                 rx.text.strong("R² = 0.990"),
                 " and ",
@@ -3566,7 +3566,7 @@ def modeling_page() -> rx.Component:
                 modeling_philosophy(),
                 section_divider(),
                 
-                univariate_regression_detail(),
+                simple_regression_detail(),
                 section_divider(),
                 
                 polynomial_regression_section(),
@@ -3575,7 +3575,7 @@ def modeling_page() -> rx.Component:
                 time_series_section(),
                 section_divider(),
                 
-                multivariate_regression_detail(),
+                Multiple_regression_detail(),
                 section_divider(),
                 
                 ridge_regression_detail(),
@@ -3587,10 +3587,10 @@ def modeling_page() -> rx.Component:
                 traditional_ml(),
                 section_divider(),
                 
-                deep_learning_univariate(),
+                deep_learning_simple(),
                 section_divider(),
                 
-                deep_learning_multivariate(),
+                deep_learning_Multiple(),
                 section_divider(),
                 
                 grand_comparison(),
