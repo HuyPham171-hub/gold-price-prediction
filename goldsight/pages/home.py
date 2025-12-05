@@ -10,8 +10,53 @@ from goldsight.utils.design_system import (
 )
 
 # ======================================================================
-# 1. HELPER COMPONENT: NAV_CARD
+# 1. HELPER COMPONENTS
 # ======================================================================
+
+def flow_box(text: str, color_scheme: str = "blue", width: str = "200px") -> rx.Component:
+    """A flowchart box component."""
+    return rx.box(
+        rx.text(
+            text,
+            size="2",
+            weight="medium",
+            color="var(--gray-12)",
+            text_align="center"
+        ),
+        padding="1em",
+        background=rx.color(color_scheme, 2),
+        border=f"2px solid {rx.color(color_scheme, 6)}",
+        border_radius="var(--radius-3)",
+        width=width,
+        min_height="60px",
+        display="flex",
+        align_items="center",
+        justify_content="center"
+    )
+
+
+def flow_arrow(direction: str = "down") -> rx.Component:
+    """A flowchart arrow component."""
+    if direction == "down":
+        return rx.icon(
+            "arrow-down",
+            size=24,
+            color=rx.color("gray", 9)
+        )
+    elif direction == "right":
+        return rx.icon(
+            "arrow-right",
+            size=24,
+            color=rx.color("gray", 9)
+        )
+    else:
+        return rx.icon(
+            "chevron-right",
+            size=24,
+            color=rx.color("gray", 9)
+        )
+
+
 def nav_card(
     title: str,
     desc: str,
@@ -169,6 +214,116 @@ def home_page() -> rx.Component:
                     max_width="800px",
                     spacing=Spacing.COMPONENT,
                     width="100%"
+                ),
+                
+                # --- System Architecture & Data Pipeline ---
+                rx.vstack(
+                    rx.heading(
+                        "System Architecture & Data Pipeline",
+                        size=Typography.SECTION,  # size="6"
+                        weight="bold",
+                        align="center"
+                    ),
+                    rx.text(
+                        "Our end-to-end system integrates data collection, preprocessing, model training, and deployment. "
+                        "Below are the high-level architecture and detailed data pipeline workflows.",
+                        text_align="center",
+                        color="var(--gray-12)",
+                        size=Typography.BODY,
+                        line_height="1.7",
+                        max_width="800px"
+                    ),
+                    
+                    align="center",
+                    spacing=Spacing.COMPONENT,
+                    width="100%"
+                ),
+                
+                # High-Level System Architecture (Horizontal Flow) - Full Width
+                rx.vstack(
+                    rx.heading(
+                        "High-Level System Architecture",
+                        size=Typography.SUBSECTION,  # size="5"
+                        weight="bold",
+                        color=rx.color(Colors.PRIMARY, 10)
+                    ),
+                    
+                    # Architecture Flowchart
+                    rx.hstack(
+                        flow_box("Data Sources\n(APIs & CSV)", "blue", "220px"),
+                        flow_arrow("right"),
+                        flow_box("Processing\nEnvironment\n(Jupyter Notebooks)", "blue", "220px"),
+                        flow_arrow("right"),
+                        flow_box("Storage\n(Models &\nDatasets)", "blue", "220px"),
+                        flow_arrow("right"),
+                        flow_box("Application Layer\n(Reflex Web App)", "blue", "220px"),
+                        
+                        spacing="3",
+                        align="center",
+                        justify="center"
+                    ),
+                    
+                    rx.text(
+                        "The system consists of four main components: Data Sources (yfinance, FRED, manual CSV), "
+                        "Processing Environment (data cleaning & model training), Storage (trained models & preprocessed datasets), "
+                        "and Application Layer (interactive web interface built with Reflex).",
+                        size=Typography.SMALL,
+                        color="var(--gray-11)",
+                        text_align="center",
+                        max_width="900px",
+                        font_style="italic"
+                    ),
+                    
+                    spacing=Spacing.COMPONENT,
+                    align="center",
+                    width="100%",
+                    padding="2em",
+                    background=rx.color("gray", 1),
+                    border_radius="var(--radius-4)"
+                ),
+                
+                # Data Pipeline Workflow (Vertical Flow)
+                rx.vstack(
+                    rx.heading(
+                        "Data Pipeline Workflow",
+                        size=Typography.SUBSECTION,  # size="5"
+                        weight="bold",
+                        color=rx.color(Colors.SECONDARY, 10)
+                    ),
+                    
+                    # Data Pipeline Flowchart
+                    rx.vstack(
+                        flow_box("Raw Data Ingestion (yfinance, FRED, Manual CSV)", "blue", "450px"),
+                        flow_arrow("down"),
+                        flow_box("Data Synchronization (Frequency Alignment)", "blue", "450px"),
+                        flow_arrow("down"),
+                        flow_box("Preprocessing (Forward-fill Imputation)", "blue", "450px"),
+                        flow_arrow("down"),
+                        flow_box("Feature Engineering (VIF Analysis & Scaling)", "blue", "450px"),
+                        flow_arrow("down"),
+                        flow_box("Final Multivariate Dataset", "blue", "450px"),
+                        
+                        spacing="2",
+                        align="center"
+                    ),
+                    
+                    rx.text(
+                        "Our data pipeline automates the complete workflow: raw data ingestion from multiple sources, "
+                        "frequency alignment to monthly intervals, forward-fill imputation for missing values, "
+                        "VIF-based feature engineering with standardization, resulting in a clean multivariate dataset ready for modeling.",
+                        size=Typography.SMALL,
+                        color="var(--gray-11)",
+                        text_align="center",
+                        max_width="800px",
+                        font_style="italic"
+                    ),
+                    
+                    spacing=Spacing.COMPONENT,
+                    align="center",
+                    width="100%",
+                    padding="2em",
+                    background=rx.color("gray", 1),
+                    border_radius="var(--radius-4)"
                 ),
                 
                 # --- Research Journey Navigation ---

@@ -1381,24 +1381,24 @@ def ridge_regression_detail() -> rx.Component:
     
     # Metrics comparison data
     metrics_data = [
-        ["Linear Regression", "0.947", "0.947", "13424.29", "115.88", "77.06"],
-        ["Ridge Regression", "0.947", "0.947", "13424.29", "115.88", "77.06"]
+        ["Linear Regression", "0.947", "0.928", "13427.07", "115.88", "77.06"],
+        ["Ridge Regression", "0.947", "0.928", "13427.07", "115.88", "77.06"]
     ]
     
     # Coefficients comparison data
     coef_data = [
-        ["CPI", "85.55", "73.56"],
-        ["Silver_Futures", "50.15", "49.39"],
-        ["S&P_500", "0.15", "0.14"],
-        ["VIX", "-11.22", "-11.28"],
-        ["Crude_Oil", "6.95", "6.71"],
-        ["GPR", "1.42", "1.39"],
-        ["GPRA", "0.52", "0.55"],
-        ["USD_Index", "-24.03", "-20.73"],
-        ["Unemployment", "94.89", "89.41"],
-        ["Treasury_Yield", "-52.38", "-8.13"],
+        ["Silver_Futures", "25.49", "25.79"],
+        ["Unemployment", "32.04", "24.39"],
+        ["CPI", "10.20", "10.73"],
+        ["VIX", "1.51", "2.22"],
+        ["S&P_500", "0.10", "0.09"],
+        ["GPR", "0.22", "0.06"],
+        ["GPRA", "0.08", "0.04"],
+        ["Crude_Oil", "-2.20", "-2.86"],
+        ["Fed_Funds_Rate", "5.12", "-4.88"],
         ["Real_Interest_Rate", "24.05", "-5.09"],
-        ["Fed_Funds_Rate", "5.12", "-4.88"]
+        ["Treasury_Yield_10Y", "-52.38", "-8.13"],
+        ["USD_Index", "-7.84", "-8.35"]
     ]
     
     return rx.vstack(
@@ -1492,85 +1492,14 @@ def ridge_regression_detail() -> rx.Component:
                         )
                     ),
                     rx.table.body(
-                        # CPI - moderate shrinkage
-                        rx.table.row(
-                            rx.table.cell("CPI"),
-                            rx.table.cell("85.55"),
-                            rx.table.cell(rx.text("73.56", color=rx.color("blue", 11))),
-                            style={"background": rx.color("blue", 1)}
-                        ),
-                        # Silver - stable (best predictor)
-                        rx.table.row(
-                            rx.table.cell("Silver_Futures"),
-                            rx.table.cell("50.15"),
-                            rx.table.cell(rx.text("49.39", color=rx.color("green", 11))),
-                            style={"background": rx.color("green", 1)}
-                        ),
-                        # S&P 500 - stable
-                        rx.table.row(
-                            rx.table.cell("S&P_500"),
-                            rx.table.cell("0.15"),
-                            rx.table.cell(rx.text("0.14", color=rx.color("green", 11))),
-                        ),
-                        # VIX - stable
-                        rx.table.row(
-                            rx.table.cell("VIX"),
-                            rx.table.cell("-11.22"),
-                            rx.table.cell(rx.text("-11.28", color=rx.color("green", 11))),
-                        ),
-                        # Crude Oil - stable
-                        rx.table.row(
-                            rx.table.cell("Crude_Oil"),
-                            rx.table.cell("6.95"),
-                            rx.table.cell(rx.text("6.71", color=rx.color("green", 11))),
-                        ),
-                        # GPR - stable
-                        rx.table.row(
-                            rx.table.cell("GPR"),
-                            rx.table.cell("1.42"),
-                            rx.table.cell(rx.text("1.39", color=rx.color("green", 11))),
-                        ),
-                        # GPRA - stable
-                        rx.table.row(
-                            rx.table.cell("GPRA"),
-                            rx.table.cell("0.52"),
-                            rx.table.cell(rx.text("0.55", color=rx.color("green", 11))),
-                        ),
-                        # USD Index - moderate shrinkage
-                        rx.table.row(
-                            rx.table.cell("USD_Index"),
-                            rx.table.cell("-24.03"),
-                            rx.table.cell(rx.text("-20.73", color=rx.color("blue", 11))),
-                            style={"background": rx.color("blue", 1)}
-                        ),
-                        # Unemployment - moderate shrinkage
-                        rx.table.row(
-                            rx.table.cell("Unemployment"),
-                            rx.table.cell("94.89"),
-                            rx.table.cell(rx.text("89.41", color=rx.color("blue", 11))),
-                            style={"background": rx.color("blue", 1)}
-                        ),
-                        # Treasury Yield - SEVERE shrinkage (VIF=179)
-                        rx.table.row(
-                            rx.table.cell("Treasury_Yield"),
-                            rx.table.cell(rx.text("−52.38", weight="bold")),
-                            rx.table.cell(rx.text("−8.13", color=rx.color("red", 11), weight="bold")),
-                            style={"background": rx.color("red", 2)}
-                        ),
-                        # Real Interest Rate - SIGN FLIP (VIF=30.81)
-                        rx.table.row(
-                            rx.table.cell("Real_Interest_Rate"),
-                            rx.table.cell(rx.text("24.05", weight="bold")),
-                            rx.table.cell(rx.text("−5.09", color=rx.color("red", 11), weight="bold")),
-                            style={"background": rx.color("red", 2)}
-                        ),
-                        # Fed Funds Rate - SIGN FLIP
-                        rx.table.row(
-                            rx.table.cell("Fed_Funds_Rate"),
-                            rx.table.cell(rx.text("5.12", weight="bold")),
-                            rx.table.cell(rx.text("−4.88", color=rx.color("red", 11), weight="bold")),
-                            style={"background": rx.color("red", 2)}
-                        ),
+                        *[
+                            rx.table.row(
+                                rx.table.cell(row[0]),
+                                rx.table.cell(row[1]),
+                                rx.table.cell(row[2]),
+                            )
+                            for row in coef_data
+                        ]
                     ),
                     variant="surface",
                     size="3",
@@ -1588,25 +1517,37 @@ def ridge_regression_detail() -> rx.Component:
                     ),
                     rx.unordered_list(
                         rx.list_item(
-                            rx.text.strong("Stable coefficients (green): "),
-                            "Silver, S&P 500, VIX, Crude Oil, GPR, GPRA remain nearly unchanged. These features have low multicollinearity and represent ",
-                            rx.text.strong("genuine independent signals"),
-                            "."
+                            rx.text.strong("Silver_Futures (25.49→25.79): "),
+                            "Minimal change (+1.2%) indicates a ",
+                            rx.text.strong("stable, independent predictor"),
+                            " with low multicollinearity"
                         ),
                         rx.list_item(
-                            rx.text.strong("Moderate shrinkage (blue): "),
-                            "CPI (85.55→73.56), USD Index (-24.03→-20.73), Unemployment (94.89→89.41) show ~10-15% reduction. These features have moderate correlation but still contribute unique information."
+                            rx.text.strong("Unemployment (32.04→24.39): "),
+                            "Moderate shrinkage (-23.9%) shows some correlation with macro variables but remains positive (safe haven effect)"
                         ),
                         rx.list_item(
-                            rx.text.strong("Severe shrinkage (red): "),
-                            rx.text.strong("Treasury Yield collapses from -52.38 to -8.13 (84% reduction)"),
-                            " due to extreme multicollinearity (VIF=179.92). The large coefficient in OLS was inflated by correlation with CPI/USD/Real Interest Rate."
+                            rx.text.strong("CPI (10.20→10.73): "),
+                            "Slight increase (+5.2%) - regularization stabilizes coefficient while maintaining inflation hedge relationship"
                         ),
                         rx.list_item(
-                            rx.text.strong("Sign flips (red): "),
-                            "Real Interest Rate (24.05→-5.09) and Fed Funds Rate (5.12→-4.88) ",
-                            rx.text.strong("reverse direction"),
-                            " under regularization. This indicates coefficients were unstable due to multicollinearity - the features share overlapping information with correlated variables."
+                            rx.text.strong("VIX (1.51→2.22): "),
+                            "Increases by 47% under Ridge - originally suppressed by multicollinearity, now reveals stronger volatility signal"
+                        ),
+                        rx.list_item(
+                            rx.text.strong("Sign flips (red flags): "),
+                            rx.text.strong("Fed_Funds_Rate (5.12→-4.88)"),
+                            " and ",
+                            rx.text.strong("Real_Interest_Rate (24.05→-5.09)"),
+                            " reverse direction. This indicates extreme multicollinearity - coefficients are unstable and unreliable"
+                        ),
+                        rx.list_item(
+                            rx.text.strong("Treasury_Yield_10Y (-52.38→-8.13): "),
+                            "Massive 84.5% shrinkage confirms severe multicollinearity (VIF=179.92) with interest rate variables"
+                        ),
+                        rx.list_item(
+                            rx.text.strong("USD_Index (-7.84→-8.35): "),
+                            "Small increase in magnitude (+6.5%) shows stable negative relationship with gold prices"
                         ),
                         spacing="2",
                         padding_left="1.5em"
