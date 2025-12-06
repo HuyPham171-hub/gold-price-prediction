@@ -2160,8 +2160,7 @@ def traditional_ml() -> rx.Component:
             rx.text(
                 "XGBoost (",
                 rx.text.strong("R² = 0.973"),
-                ") surprisingly performed worse than SVR and Random Forest. This suggests the model may be overfitting "
-                "to training data despite regularization. XGBoost's strength lies in tabular data with complex interactions, but our "
+                ") Slightly performed worse than SVR and Random Forest. XGBoost's strength lies in tabular data with complex interactions, but our "
                 "relatively clean dataset with strong linear trends may not benefit as much from gradient boosting's aggressive optimization.",
                 size="3",
                 color="var(--gray-12)",
