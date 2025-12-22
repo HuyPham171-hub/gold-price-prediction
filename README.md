@@ -1,6 +1,6 @@
 # GoldSight: Gold Price Forecasting System
 
-A comprehensive machine learning system for forecasting gold prices using historical market data and macroeconomic indicators. This project implements deep learning architectures and traditional econometric models to deliver accurate short-term and medium-term gold price predictions through an interactive web application.
+A comprehensive machine learning system for forecasting gold prices using historical market data and macroeconomic indicators. This project implements multiple forecasting methodologies including linear regression, ARIMA/SARIMA, traditional machine learning models, and deep learning architectures to deliver accurate gold price predictions through an interactive web application.
 
 ## Table of Contents
 
@@ -8,24 +8,36 @@ A comprehensive machine learning system for forecasting gold prices using histor
 - [Features](#features)
 - [Project Structure](#project-structure)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Quick Start](#quick-start)
 - [Data Sources](#data-sources)
-- [Modeling Approach](#modeling-approach)
-- [Results](#results)
+- [Methodology](#methodology)
+- [Model Performance](#model-performance)
 - [Web Application](#web-application)
+- [Notebooks](#notebooks)
 - [Technical Stack](#technical-stack)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
 - [License](#license)
+- [Acknowledgments](#acknowledgments)
 
 ## Overview
 
-GoldSight combines multiple forecasting methodologies to predict gold spot prices with high accuracy (R² = 0.990, MAE = $34.94). The system analyzes 13 features including market indicators, macroeconomic variables, and risk metrics spanning 2006-2025.
+GoldSight is an end-to-end machine learning system designed to forecast gold spot prices with high accuracy. The project implements and compares multiple forecasting approaches, from classical statistical models to state-of-the-art deep learning architectures, achieving a best R-squared score of 0.990 and Mean Absolute Error of $34.94 using the GRU Multivariate model.
 
-### Key Objectives
+### Key Achievements
 
-- Develop robust forecasting models using multivariate time series analysis
-- Quantify economic drivers influencing gold price movements
-- Provide actionable insights for investment decision-making
-- Deploy an accessible web interface for real-time forecasting
+- **High Accuracy**: Best model achieves R² = 0.990, MAE = $34.94 on test set
+- **Comprehensive Analysis**: Analyzed 233 monthly observations from January 2006 to May 2025
+- **Multi-Model Comparison**: Evaluated 13+ models across 4 categories (Statistical, ML, Deep Learning)
+- **Production Ready**: Deployed interactive web application with real-time forecasting capabilities
+- **Robust Feature Engineering**: Integrated 12 predictor variables spanning market, macroeconomic, and geopolitical indicators
+
+### Use Cases
+
+- Investment decision support for gold market participants
+- Academic research in time series forecasting and financial modeling
+- Benchmark for evaluating forecasting methodologies on commodity prices
+- Educational resource for machine learning applications in finance
 
 ## Features
 
