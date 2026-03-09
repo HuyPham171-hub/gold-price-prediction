@@ -2361,7 +2361,7 @@ def deep_learning_simple() -> rx.Component:
                         rx.vstack(
                             rx.heading("Training History", size="3", weight="bold", margin_bottom="0.5em"),
                             rx.image(
-                                src="/modeling_plots/mlp/training_history.png",
+                                src="/modeling_plots/mlp/training_loss.png",
                                 width="100%",
                                 border_radius="var(--radius-3)",
                                 border="1px solid",

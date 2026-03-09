@@ -52,70 +52,30 @@ GoldSight is an end-to-end machine learning system designed to forecast gold spo
 
 ```
 Project/
-├── data/                          # Dataset directory
-│   ├── raw/                       # Original data files
-│   │   ├── gold_spot_WGC.csv
-│   │   ├── market_data.csv
-│   │   ├── macro_monthly.csv
-│   │   ├── real_interest_rate.csv
-│   │   ├── usd_index.csv
-│   │   ├── vix_data.csv
-│   │   └── data_gpr_export.xls
-│   ├── processed/                 # Cleaned and transformed data
-│   │   ├── market_data_ffill.csv
-│   │   ├── RIR_ffill.csv
-│   │   ├── usd_ffill.csv
-│   │   └── vix_ffill.csv
-│   ├── combined_data.csv          # Merged dataset
-│   └── filtered_data.csv          # Final feature set
+├── data/                      # Dataset directory (Ignored in Git)
+│   ├── raw/                   # Raw collected data (Gold, Macro, GPR, VIX)
+│   ├── processed/             # Cleaned and transformed data
+│   └── filtered_data.csv      # Final feature set for modeling
 │
-├── notebooks/                     # Jupyter notebooks
-│   ├── collect_data.ipynb         # Data collection pipeline
-│   ├── explore.ipynb              # Exploratory data analysis
-│   ├── modeling_new.ipynb         # Model training and evaluation
-│   └── plots_case1/               # Generated visualizations
+├── notebooks/                 # Jupyter notebooks for experimentation
+│   ├── collect_data.ipynb     # Data collection and merging pipeline
+│   ├── explore.ipynb          # Exploratory Data Analysis (EDA)
+│   └── modeling.ipynb         # Model training and evaluation (11 models)
 │
-├── models/                        # Trained model artifacts
-│   ├── best_gru_multivariate.keras
-│   ├── best_lstm_multivariate.keras
-│   ├── best_rnn_multivariate.keras
-│   ├── best_gru.keras
-│   ├── best_lstm.keras
-│   ├── best_rnn.keras
-│   └── best_mlp.keras
+├── models/                    # Trained model artifacts (.keras, .pkl)
+│   ├── best_gru_multivariate.keras  # Top performing model
+│   └── scaler_X.pkl           # Feature scalers
 │
-├── goldsight/                     # Reflex web application
-│   ├── goldsight.py               # Main application entry
-│   ├── pages/                     # Application pages
-│   │   ├── home.py
-│   │   ├── data_collection.py
-│   │   ├── eda.py
-│   │   ├── modeling.py
-│   │   └── forecast.py
-│   ├── components/                # Reusable UI components
-│   │   ├── navbar.py
-│   │   ├── buttons.py
-│   │   ├── card.py
-│   │   ├── chart.py
-│   │   ├── chapter_nav.py
-│   │   └── layout.py
-│   ├── services/                  # Business logic
-│   │   ├── data_collector.py
-│   │   ├── data_preprecessor.py
-│   │   └── forecast_pipeline.py
-│   ├── utils/                     # Utility functions
-│   │   └── design_system.py
-│   └── data/cache/                # Cached visualizations
+├── goldsight/                 # Reflex web application source code
+│   ├── pages/                 # UI Pages (Home, Forecast, EDA)
+│   ├── components/            # Reusable UI components (Navbar, Buttons)
+│   ├── services/              # Business logic (Data pipeline, Inference)
+│   └── goldsight.py           # Main application entry point
 │
-├── results/                       # Analysis outputs
-│   ├── explore/                   # EDA visualizations
-│   └── LR_Univariate/             # Regression analysis plots
-│
-├── requirements.txt               # Python dependencies
-├── requirements-dev.txt           # Development dependencies
-├── rxconfig.py                    # Reflex configuration
-├── README.md                      # Project documentation
-└── PRODUCT_DESCRIPTION.md         # Product overview
+├── assets/                    # Static assets (Architecture diagrams, Icons)
+├── requirements.txt           # Python dependencies
+├── rxconfig.py                # Reflex framework configuration
+└── README.md                  # Project documentation
 
 ```
 
@@ -206,7 +166,7 @@ Access the application at `http://localhost:3000`
 ### Target Variable
 - **Gold Spot Price (USD)**: Daily gold prices from World Gold Council
 
-**Data Range**: January 2006 - December 2024 (6,800+ observations)
+**Data Range**: January 2006 - May 2025 (233 monthly observations)
 
 ## Modeling Approach
 
@@ -227,13 +187,13 @@ Access the application at `http://localhost:3000`
 | Model | Architecture | Parameters | R² Score | MAE (USD) |
 |-------|--------------|------------|----------|-----------|
 | GRU Multivariate | 128-64-32 units, 3 layers | 45,312 | 0.990 | $34.94 |
-| LSTM Multivariate | 128-64-32 units, 3 layers | 60,416 | 0.989 | $36.20 |
-| RNN Multivariate | 128-64-32 units, 3 layers | 30,208 | 0.987 | $38.75 |
+| LSTM Multivariate | 128-64-32 units, 3 layers | 60,416 | 0.990 | $37.84 |
+| RNN Multivariate | 64-64-32 units, 3 layers | 30,208 | 0.972 | $58.99 |
 
 #### Training Configuration
 - **Optimizer**: Adam (learning rate: 0.001)
 - **Loss Function**: Mean Squared Error
-- **Regularization**: Dropout (0.2), Early Stopping (patience: 20)
+- **Regularization**: Dropout (0.2), Early Stopping (patience: 15)
 - **Batch Size**: 32
 - **Epochs**: 200 (with early stopping)
 - **Validation Split**: 80/20 train-test
@@ -241,8 +201,8 @@ Access the application at `http://localhost:3000`
 ### Feature Engineering
 - Forward-fill for missing values
 - Daily resampling for monthly indicators
-- Min-Max normalization (0-1 scale)
-- Sequence length: 60 days for temporal models
+- StandardScaler normalization (zero mean, unit variance)
+- Sequence window: 12 months for temporal models
 
 ## Results
 
@@ -251,7 +211,7 @@ Access the application at `http://localhost:3000`
 **Best Model: GRU Multivariate**
 - R² Score: 0.990
 - Mean Absolute Error: $34.94
-- Root Mean Squared Error: $47.23
+- Root Mean Squared Error: $45.92
 - Mean Absolute Percentage Error: 2.1%
 
 ### Key Findings
@@ -266,9 +226,9 @@ Access the application at `http://localhost:3000`
 | Category | Model | R² | MAE | RMSE | MAPE |
 |----------|-------|-----|-----|------|------|
 | Baseline | Linear Regression | 0.947 | $78.89 | $99.45 | 4.8% |
-| Deep Learning | GRU Multivariate | 0.990 | $34.94 | $47.23 | 2.1% |
-| Deep Learning | LSTM Multivariate | 0.989 | $36.20 | $48.90 | 2.2% |
-| Deep Learning | RNN Multivariate | 0.987 | $38.75 | $51.34 | 2.4% |
+| Deep Learning | GRU Multivariate | 0.990 | $34.94 | $45.92 | 2.1% |
+| Deep Learning | LSTM Multivariate | 0.990 | $37.84 | $45.31 | 2.5% |
+| Deep Learning | RNN Multivariate | 0.972 | $58.99 | $76.77 | 3.9% |
 
 ## Web Application
 
