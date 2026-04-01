@@ -469,7 +469,7 @@ def simple_regression_detail() -> rx.Component:
                     rx.vstack(
                         rx.heading("Top 9 Features Performance", size="5", weight="bold", margin_bottom="1em"),
                         rx.image(
-                            src="/modeling_plots/simple/top_9_polynomial.png",
+                            src="/modeling_plots/univariate/top_9_polynomial.png",
                             width="100%",
                             border_radius="var(--radius-3)",
                             border="1px solid",
@@ -1088,7 +1088,7 @@ def Multiple_regression_detail() -> rx.Component:
                         rx.vstack(
                             rx.heading("Diagnostic Plots (3-Panel)", size="5", weight="bold", margin_bottom="1em"),
                             rx.image(
-                                src="/modeling_plots/Multiple/diagnostics_3panel.png",
+                                src="/modeling_plots/multivariate/diagnostics_3panel.png",
                                 width="100%",
                                 border_radius="var(--radius-3)",
                                 border="1px solid",
@@ -1973,7 +1973,7 @@ def traditional_ml() -> rx.Component:
     """Traditional ML models comparison."""
     ml_data = [
         ["Support Vector Regression (SVR)", "0.986", "$59.93", "$43.77", "GridSearch: C=100, gamma=0.01"],
-        ["Random Forest", "0.986", "$59.93", "$43.77", "500 trees, depth=20, 1620 CV fits"],
+        ["Random Forest", "0.974", "$80.46", "$55.39", "500 trees, depth=20, 1620 CV fits"],
         ["XGBoost", "0.973", "$82.67", "$51.11", "Slightly underperformed than others"]
     ]
     
