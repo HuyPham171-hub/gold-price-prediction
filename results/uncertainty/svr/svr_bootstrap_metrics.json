@@ -1,0 +1,21 @@
+{
+  "created_at_utc": "2026-04-14T10:42:28.328305",
+  "B": 100,
+  "svr_metric_coverage_90": 0.574468085106383,
+  "svr_metric_avg_width_90": 96.8514763657125,
+  "svr_params": {
+    "kernel": "rbf",
+    "C": 100,
+    "gamma": 0.01,
+    "epsilon": 0.01
+  },
+  "split_info": {
+    "test_size": 0.2,
+    "shuffle": true,
+    "random_state": 42
+  },
+  "samples_shape": [
+    47,
+    100
+  ]
+}
