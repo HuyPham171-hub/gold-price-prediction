@@ -1,0 +1,43 @@
+{
+  "created_at_utc": "2026-04-14T23:18:43.951774",
+  "config": {
+    "window": 12,
+    "test_size": 0.2,
+    "random_state": 42,
+    "mc_T": 200
+  },
+  "gpr_features": [
+    "GPR",
+    "GPRA"
+  ],
+  "metrics": [
+    {
+      "variant": "GRU_full",
+      "R2": 0.9879626035690308,
+      "RMSE": 49.92317199707031,
+      "MAE": 37.90907669067383,
+      "coverage_90": 0.5333333333333333,
+      "width_90": 82.5129603407118,
+      "mc_T": 200,
+      "delta_R2_vs_full": 0.0,
+      "delta_RMSE_vs_full": 0.0,
+      "delta_MAE_vs_full": 0.0,
+      "delta_coverage_90_vs_full": 0.0,
+      "delta_width_90_vs_full": 0.0
+    },
+    {
+      "variant": "GRU_no_gpr",
+      "R2": 0.987733781337738,
+      "RMSE": 50.39541244506836,
+      "MAE": 42.79521560668945,
+      "coverage_90": 0.5555555555555556,
+      "width_90": 79.17046644422743,
+      "mc_T": 200,
+      "delta_R2_vs_full": -0.0002288222312927246,
+      "delta_RMSE_vs_full": 0.4722404479980469,
+      "delta_MAE_vs_full": 4.886138916015625,
+      "delta_coverage_90_vs_full": 0.022222222222222254,
+      "delta_width_90_vs_full": -3.3424938964843705
+    }
+  ]
+}
