@@ -1,0 +1,11 @@
+{
+  "created_at_utc": "2026-04-14T20:28:53.841796",
+  "method": "MC_Dropout_GRU",
+  "T": 200,
+  "gru_metric_coverage_90": 0.6444444444444445,
+  "gru_metric_avg_width_90": 82.08031589084203,
+  "samples_shape": [
+    45,
+    200
+  ]
+}
