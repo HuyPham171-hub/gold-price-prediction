@@ -1,6 +1,8 @@
 # GoldSight: Gold Price Forecasting System
 
-A comprehensive machine learning system for forecasting gold prices using historical market data and macroeconomic indicators. This project implements multiple forecasting methodologies including linear regression, ARIMA/SARIMA, traditional machine learning models, and deep learning architectures to deliver accurate gold price predictions through an interactive web application.
+GoldSight is an end-to-end gold price forecasting project that combines data collection, preprocessing, model training, and web-based prediction into one workflow. It uses historical market and macroeconomic indicators to estimate future gold prices and present the results through an interactive Reflex application.
+
+The project compares several forecasting approaches, including statistical models, traditional machine learning, and deep learning, so users can understand how different methods perform on the same dataset.
 
 ## Table of Contents
 
@@ -22,7 +24,14 @@ A comprehensive machine learning system for forecasting gold prices using histor
 
 ## Overview
 
-GoldSight is an end-to-end machine learning system designed to forecast gold spot prices with high accuracy. The project implements and compares multiple forecasting approaches, from classical statistical models to state-of-the-art deep learning architectures, achieving a best R-squared score of 0.990 and Mean Absolute Error of $34.94 using the GRU Multivariate model.
+GoldSight is designed to help analyze and forecast gold spot prices using time-series and regression-based machine learning methods. The system brings together historical financial data, macroeconomic indicators, feature engineering, and trained forecasting models in a single application.
+
+At a high level, it:
+
+- collects and cleans market and macroeconomic data;
+- prepares features for univariate and multivariate forecasting;
+- trains and evaluates multiple models, including linear regression, ARIMA/SARIMA, and deep learning architectures such as GRU, LSTM, and RNN;
+- serves predictions and visualizations through a web interface.
 
 ### Key Achievements
 
