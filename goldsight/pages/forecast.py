@@ -126,34 +126,42 @@ class ForecastState(rx.State):
             
             # Rolling forecast for 6 months
             forecasts_data = []
-            rmse = 45.92
+            import tensorflow as tf # Đảm bảo import tf
+            mc_samples = 100 
             
             for i in range(self.forecast_months):
                 # Scale features
                 X_scaled = self.scaler_X.transform(X_last_12)
                 
-                # Reshape for GRU: (1, 12, 12)
+                # Reshape cho GRU: (1, 12, 12)
                 X_input = X_scaled.reshape(1, 12, 12)
+                X_input_tf = tf.convert_to_tensor(X_input, dtype=tf.float32)
                 
-                # Predict
-                y_pred_scaled = self.model.predict(X_input, verbose=0)
-                y_pred = self.scaler_y.inverse_transform(y_pred_scaled)[0, 0]
+                # Chạy MC Dropout: training=True để tính uncertainty
+                mc_preds_scaled = []
+                for _ in range(mc_samples):
+                    pred = self.model(X_input_tf, training=True) 
+                    mc_preds_scaled.append(pred.numpy()[0, 0])
+                    
+                mc_preds_scaled = np.array(mc_preds_scaled).reshape(-1, 1)
+                mc_preds_real = self.scaler_y.inverse_transform(mc_preds_scaled).flatten()
                 
-                # Calculate confidence interval
-                confidence_lower = y_pred - 1.96 * rmse
-                confidence_upper = y_pred + 1.96 * rmse
+                # Lấy Median làm giá trị dự báo, và Percentiles cho bound 90%
+                y_pred = np.median(mc_preds_real)
+                lower_90ci = np.percentile(mc_preds_real, 5)
+                upper_90ci = np.percentile(mc_preds_real, 95)
                 
                 # Calculate forecast date
                 forecast_date = baseline_date + pd.DateOffset(months=i+1)
                 change_pct = ((y_pred - baseline_price) / baseline_price) * 100
                 
-                # Store forecast
+                # ĐỔI TÊN KEY Ở ĐÂY CHO KHỚP NOTEBOOK
                 forecasts_data.append({
                     "month": forecast_date.strftime("%b %Y"),
                     "date": forecast_date,
                     "price": round(float(y_pred), 2),
-                    "lower": round(float(confidence_lower), 2),
-                    "upper": round(float(confidence_upper), 2),
+                    "lower_90CI": round(float(lower_90ci), 2),
+                    "upper_90CI": round(float(upper_90ci), 2),
                     "change_pct": round(float(change_pct), 2)
                 })
                 
@@ -216,8 +224,10 @@ class ForecastState(rx.State):
             
             # Confidence Interval (shaded area)
             forecast_dates_only = [f["date"] for f in self.forecasts]
-            lower_bounds = [f["lower"] for f in self.forecasts]
-            upper_bounds = [f["upper"] for f in self.forecasts]
+            
+            # Đổi key lấy dữ liệu khớp với biến tạo ra
+            lower_bounds = [f["lower_90CI"] for f in self.forecasts]
+            upper_bounds = [f["upper_90CI"] for f in self.forecasts]
             
             fig.add_trace(go.Scatter(
                 x=forecast_dates_only + forecast_dates_only[::-1],
@@ -225,7 +235,8 @@ class ForecastState(rx.State):
                 fill='toself',
                 fillcolor='rgba(220, 38, 38, 0.2)',
                 line=dict(color='rgba(255,255,255,0)'),
-                name='95% Confidence Interval',
+                # Đổi Label phần legend thể hiện tính chuyên môn MC Dropout
+                name='90% Confidence Band (MC Dropout Unc)',
                 showlegend=True,
                 hoverinfo='skip'
             ))
@@ -326,8 +337,9 @@ def forecast_page() -> rx.Component:
                                         rx.table.row(
                                             rx.table.column_header_cell("Month"),
                                             rx.table.column_header_cell("Predicted Price"),
-                                            rx.table.column_header_cell("Lower Bound (95%)"),
-                                            rx.table.column_header_cell("Upper Bound (95%)"),
+                                            # ĐỔI TÊN TIÊU ĐỀ CỘT CHO KHỚP 90% MC DROPOUT
+                                            rx.table.column_header_cell("Lower Bound (90% CI)"),
+                                            rx.table.column_header_cell("Upper Bound (90% CI)"),
                                             rx.table.column_header_cell("Change vs May '25"),
                                         )
                                     ),
@@ -339,8 +351,9 @@ def forecast_page() -> rx.Component:
                                                 rx.table.cell(
                                                     rx.heading(f"${forecast['price']}", size="3", color=rx.color("amber", 10))
                                                 ),
-                                                rx.table.cell(f"${forecast['lower']}"),
-                                                rx.table.cell(f"${forecast['upper']}"),
+                                                # ĐỔI KEY DỮ LIỆU ĐỂ RENDER
+                                                rx.table.cell(f"${forecast['lower_90CI']}"),
+                                                rx.table.cell(f"${forecast['upper_90CI']}"),
                                                 rx.table.cell(
                                                     rx.text(
                                                         f"{forecast['change_pct']}%",

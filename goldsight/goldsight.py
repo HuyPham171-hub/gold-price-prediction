@@ -1,7 +1,7 @@
 """GoldSight - Gold Price Prediction Web Application."""
 
 import reflex as rx
-from rxconfig import config
+from goldsight.rxconfig import config
 
 # Import pages
 from goldsight.pages.home import home_page
