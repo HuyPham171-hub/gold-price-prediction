@@ -3,7 +3,8 @@ src/evaluation/mc_engine.py
 
 Monte Carlo Dropout Inference Engine for Dual-Head Architectures.
 Combines Epistemic Uncertainty (model weight dispersion) with dynamically learned 
-Aleatoric Uncertainty (predicted data variance) using the Law of Total Variance.
+Aleatoric Uncertainty (predicted data variance). Generates empirical quantiles 
+from the combined predictive mixture to capture non-Gaussian tail behavior.
 """
 
 import torch
@@ -26,16 +27,19 @@ def activate_mc_dropout(model: nn.Module) -> None:
 def run_stochastic_inference(
     model: nn.Module, 
     dataloader: torch.utils.data.DataLoader, 
-    device: torch.device, 
-    T: int = 200
+    device: torch.device,
+    scaler_target=None, 
+    T: int = 200,
+    confidence_level: float = 0.90
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-    Runs T forward passes. Calculates Total Variance by fusing Epistemic and Aleatoric components.
+    Runs T forward passes. Calculates empirical quantiles by sampling from the 
+    predictive mixture of Gaussians.
     
     Returns:
         y_mean: Deterministic point forecast.
-        lower_bound: 5th percentile of the combined distribution (90% CI).
-        upper_bound: 95th percentile of the combined distribution (90% CI).
+        lower_bound: Lower empirical quantile of the combined distribution.
+        upper_bound: Upper empirical quantile of the combined distribution.
     """
     logger.info(f"Starting Dual-Head MC Dropout inference with T={T} passes...")
     
@@ -65,30 +69,46 @@ def run_stochastic_inference(
             if (t + 1) % 50 == 0:
                 logger.info(f"Completed {t + 1}/{T} stochastic passes.")
 
-    # Stack matrices into shape (T, N_samples)
-    mu_matrix = np.array(all_mu).squeeze(-1)
+    # Stack matrices into shape (T, N_samples, 1) and squeeze
+    mu_matrix = np.array(all_mu).squeeze(-1)       # Shape: (T, N_samples)
     sigma_sq_matrix = np.array(all_sigma_sq).squeeze(-1)
     
-    # 1. Expected Point Forecast (Mean of all predicted means)
+    # 1. Expected Point Forecast
     y_mean = np.mean(mu_matrix, axis=0)
     
-    # 2. Epistemic Variance (Dispersion of the predicted means over T passes)
-    epistemic_var = np.var(mu_matrix, axis=0)
+    # 2. Empirical Sampling
+    std_matrix = np.sqrt(sigma_sq_matrix)
+    sampled_y = np.random.normal(loc=mu_matrix, scale=std_matrix)
     
-    # 3. Aleatoric Variance (Average of the predicted data variances over T passes)
+    # 3. Extract Empirical Quantiles
+    lower_q = ((1.0 - confidence_level) / 2.0) * 100
+    upper_q = (1.0 - (1.0 - confidence_level) / 2.0) * 100
+    lower_bound = np.percentile(sampled_y, lower_q, axis=0)
+    upper_bound = np.percentile(sampled_y, upper_q, axis=0)
+    
+    # 4. Aleatoric Variance extraction for Volatility tracking
     aleatoric_var = np.mean(sigma_sq_matrix, axis=0)
     
-    # 4. Law of Total Variance
-    total_var = epistemic_var + aleatoric_var
-    total_std = np.sqrt(total_var)
+    # =========================================================================
+    # STRICT FIX: Variance & Point Scaling Inversion (RQ2 Requirement)
+    # =========================================================================
+    if scaler_target is not None:
+        logger.info("Inverting predictions back to original financial scale...")
+        # Get scaling standard deviation (s_y) and mean (m_y)
+        s_y = scaler_target.scale_[0]
+        m_y = scaler_target.mean_[0]
+        
+        # Invert Point Predictions & Bounds
+        y_mean = (y_mean * s_y) + m_y
+        lower_bound = (lower_bound * s_y) + m_y
+        upper_bound = (upper_bound * s_y) + m_y
+        
+        # Invert Variance: sigma^2_original = (s_y^2) * sigma^2_scaled
+        aleatoric_var = aleatoric_var * (s_y ** 2)
+    # =========================================================================
     
-    # 5. Gaussian Bounds for 90% Confidence Interval (Z-score = 1.645)
-    lower_bound = y_mean - 1.645 * total_std
-    upper_bound = y_mean + 1.645 * total_std
-    
-    logger.info("Inference complete. Heteroskedastic bounds generated.")
-    
-    return y_mean, lower_bound, upper_bound
+    logger.info(f"Inference complete. Empirical {confidence_level*100}% bounds generated.")
+    return y_mean, lower_bound, upper_bound, aleatoric_var
 
 def extract_true_labels(dataloader: torch.utils.data.DataLoader) -> np.ndarray:
     all_labels = []

@@ -1,10 +1,9 @@
 """
 experiments/run_rq3_ablation.py
 
-Executes the experiment for RQ3: Feature Ablation (The Value of Risk Anchors).
-Compares two models during Crisis Regimes:
-1. Model 3 (Full Features)
-2. Model 3_Ablated (Without GPR and Gold_VIX anchors)
+Executes RQ3: Nested Feature Ablation (M0 to M4) and Variance Explainability.
+Isolates the contribution of GVZ and GPR in expanding intervals during crises.
+Generates SHAP and PDP plots exclusively for the predicted log-variance.
 """
 
 import sys
@@ -21,152 +20,145 @@ from src.data.dataset import prepare_dataloaders
 from src.models.hybrid import CNN_GRU
 from src.training.trainer import ModelTrainer
 from src.evaluation.mc_engine import run_stochastic_inference
-from src.evaluation.metrics import get_regime_masks, evaluate_all_regimes
+from src.evaluation.metrics import evaluate_all_regimes
+from src.evaluation.explainability import run_variance_shap, generate_variance_pdp
+from experiments.run_rq2_uncertainty import get_frozen_regime_masks
+import random
+import os
 
-def get_test_risk_feature(csv_path: str, test_dates: np.ndarray, feature_name: str = 'Gold_VIX_Level') -> np.ndarray:
-    df = pd.read_csv(csv_path, index_col='Date', parse_dates=True)
-    if feature_name not in df.columns:
-        fallback = [c for c in df.columns if 'GPR' in c or 'VIX' in c][0]
-        feature_name = fallback
-    return df.loc[test_dates, feature_name].values
+def seed_everything(seed: int = 42):
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
-def create_ablated_dataset(original_csv: Path, ablated_csv: Path):
-    df = pd.read_csv(original_csv, index_col='Date', parse_dates=True)
-    risk_cols = [col for col in df.columns if ('GPR' in col) or ('Gold_VIX' in col)]
-    print(f"Ablating (Removing) Risk Anchors: {risk_cols}")
-    df_ablated = df.drop(columns=risk_cols)
-    df_ablated.to_csv(ablated_csv)
-
-def run_ablation_pipeline(
-    csv_path: Path, 
-    model_name: str, 
-    device: torch.device, 
-    normal_mask: np.ndarray, 
-    crisis_mask: np.ndarray
-):
-    dataloaders, raw_arrays, _ = prepare_dataloaders(
-        csv_path=str(csv_path),
-        target_col="Gold_Price_Return",
-        window_size=21,
-        batch_size=32
+def run_nested_ablation(csv_path: str, model_name: str, keep_features: list, device: torch.device, normal_mask, crisis_mask):
+    # In-memory ablation by passing keep_features to the dataloader
+    dataloaders, raw_arrays, scaler = prepare_dataloaders(
+        csv_path=csv_path, target_col="Gold_Price_Return", keep_cols=keep_features
     )
-
-    # Automatically derive the exact input feature count directly from the tensor
-    input_size = dataloaders['train'].dataset.X.shape[2]
-
-    print(f"\n{'-'*60}")
-    print(f"Executing Pipeline: {model_name} (Derived Input Features: {input_size})")
-    print(f"{'-'*60}")
-
-    y_test_true = raw_arrays['y_test']
-
-    model = CNN_GRU(
-        input_size=input_size, 
-        cnn_filters=32, 
-        kernel_size=3, 
-        gru_hidden_size=64, 
-        gru_num_layers=1, 
-        dropout_rate=0.2
-    )
-
+    
+    # Infer input_size dynamically from the instantiated training tensor
+    sample_x, _ = next(iter(dataloaders['train']))
+    input_size = int(sample_x.shape[2])
+    
+    print(f"\n--- Training {model_name} (Derived Input Size: {input_size}) ---")
+    
+    model = CNN_GRU(input_size=input_size).to(device)
     trainer = ModelTrainer(model=model, dataloaders=dataloaders, device=device)
-    trainer.train(model_name=model_name, num_epochs=100, learning_rate=1e-3, patience=15)
-
-    y_mean, lower_bound, upper_bound = run_stochastic_inference(
-        model=trainer.model, 
-        dataloader=dataloaders['test'], 
-        device=device, 
-        T=200
+    
+    trainer.train(model_name=model_name, num_epochs=80, patience=15)
+    
+    y_mean, lower_bound, upper_bound, variance_pred = run_stochastic_inference(
+        model=trainer.model, dataloader=dataloaders['test'], device=device, scaler_target=scaler, T=200
     )
+    
+    # Invert target scaling to evaluate predictions in original return space
+    s_y = scaler.scale_[0]
+    m_y = scaler.mean_[0]
+    y_test_unscaled = (raw_arrays['y_test'] * s_y) + m_y
 
     metrics = evaluate_all_regimes(
-        y_true=y_test_true,
-        y_pred=y_mean,
-        lower_bound=lower_bound,
-        upper_bound=upper_bound,
-        normal_mask=normal_mask,
-        crisis_mask=crisis_mask
+        y_true=y_test_unscaled, 
+        y_pred=y_mean, 
+        lower_bound=lower_bound, 
+        upper_bound=upper_bound, 
+        normal_mask=normal_mask, 
+        crisis_mask=crisis_mask,
+        variance_pred=variance_pred
     )
-
-    return metrics
+    actual_tensor_features = list(dict.fromkeys(keep_features + ["Gold_Price_Return"]))
+    return metrics, trainer.model, dataloaders, actual_tensor_features
 
 def main():
+    seed_everything(42)
     print(f"\n{'='*80}")
-    print("RUNNING EXPERIMENT RQ3: FEATURE ABLATION (THE VALUE OF RISK ANCHORS)")
+    print("RUNNING EXPERIMENT RQ3: NESTED ABLATION & VARIANCE EXPLAINABILITY")
     print(f"{'='*80}\n")
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-    print(f"Using device: {device}")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    data_file = base_dir / "data" / "processed" / "daily_processed_features.csv"
 
-    proc_file = base_dir / "data" / "processed" / "daily_processed_features.csv"
-    ablated_file = base_dir / "data" / "processed" / "daily_ablated_features.csv"
-    
-    if not proc_file.exists():
-        print(f"Error: Processed file not found at {proc_file}")
-        sys.exit(1)
+    # Extract actual column names from the dataset to avoid missing feature errors
+    df_sample = pd.read_csv(data_file, nrows=1, index_col='Date')
+    all_features = [c for c in df_sample.columns if c != 'Gold_Price_Return']
 
-    # 1. Regime Definition from Full Dataset
-    _, raw_arrays_full, _ = prepare_dataloaders(str(proc_file), target_col="Gold_Price_Return", window_size=21, batch_size=32)
-    test_dates = raw_arrays_full['test_dates']
-    
-    risk_array = get_test_risk_feature(str(proc_file), test_dates, feature_name='Gold_VIX_Level')
-    normal_mask, crisis_mask = get_regime_masks(risk_array, threshold_percentile=90.0)
-    
-    # 2. Create Ablated Dataset
-    create_ablated_dataset(proc_file, ablated_file)
+    # Automatically partition features into blocks to prevent hardcoded naming mismatches
+    gvz_cols = [c for c in all_features if 'VIX' in c or 'GVZ' in c]
+    gpr_cols = [c for c in all_features if 'GPR' in c]
+    gold_cols = [c for c in all_features if 'Gold' in c and c not in gvz_cols]
+    macro_cols = [c for c in all_features if c not in gvz_cols and c not in gpr_cols and c not in gold_cols]
+
+    # Construct the nested ablation hierarchy (M0 through M4)
+    m0_features = gold_cols if len(gold_cols) > 0 else [all_features[0]]
+    m1_features = list(dict.fromkeys(m0_features + macro_cols))
+    m2_features = list(dict.fromkeys(m1_features + gvz_cols))
+    m3_features = list(dict.fromkeys(m1_features + gpr_cols))
+    m4_features = all_features
+
+    ablation_matrix = {
+        "M0_GoldOnly": m0_features,
+        "M1_Macro": m1_features,
+        "M2_Macro_GVZ": m2_features,
+        "M3_Macro_GPR": m3_features,
+        "M4_Full": m4_features
+    }
+
+    # 1. Regime Identification using Frozen In-Sample GVZ Threshold
+    _, raw_arrays_full, _ = prepare_dataloaders(str(data_file), target_col="Gold_Price_Return")
+    normal_mask, crisis_mask, _ = get_frozen_regime_masks(
+        str(data_file), raw_arrays_full['train_dates'], raw_arrays_full['test_dates'], anchor='Gold_VIX_Level'
+    )
 
     results = {}
+    full_model = None
+    full_dataloaders = None
+    actual_full_features = None
 
-    # 3. Run Full Model
-    results["Model_3_Full"] = run_ablation_pipeline(
-        csv_path=proc_file,
-        model_name="CNN_GRU_Full_Features",
-        device=device,
-        normal_mask=normal_mask,
-        crisis_mask=crisis_mask
-    )
+    # 2. Iterate and train through each stage of the nested ablation matrix
+    for name, features in ablation_matrix.items():
+        metrics, model, dl, used_features = run_nested_ablation(
+            str(data_file), name, features, device, normal_mask, crisis_mask
+        )
+        results[name] = metrics
+        
+        if name == "M4_Full":
+            full_model = model
+            full_dataloaders = dl
+            actual_full_features = used_features
 
-    # 4. Run Ablated Model
-    results["Model_3_Ablated"] = run_ablation_pipeline(
-        csv_path=ablated_file,
-        model_name="CNN_GRU_Ablated",
-        device=device,
-        normal_mask=normal_mask,
-        crisis_mask=crisis_mask
-    )
+    # 3. Activate explainability diagnostics targeting the variance channel (SHAP & PDP)
+    if full_model is not None:
+        print("\n--- Running Variance Explainability (SHAP & PDP) ---")
+        train_batch_x, _ = next(iter(full_dataloaders['train']))
+        test_batch_x, _ = next(iter(full_dataloaders['test']))
+        
+        bg_samples = train_batch_x.to(device)
+        test_samples = test_batch_x[:min(50, len(test_batch_x))].to(device)
+        
+        explain_dir = base_dir / "results" / "explainability"
+        run_variance_shap(
+            full_model, bg_samples, test_samples, actual_full_features, save_dir=str(explain_dir)
+        )
+        
+        # Generate Partial Dependence Plots for risk anchors available in the dataset
+        for anchor_name in ['Gold_VIX_Level', 'GPRD_THREAT_Level']:
+            if anchor_name in actual_full_features:
+                idx = actual_full_features.index(anchor_name)
+                generate_variance_pdp(
+                    full_model, test_samples, idx, anchor_name, save_dir=str(explain_dir)
+                )
 
-    # 5. Display Key Findings (Delta Metrics)
-    full_crisis_picp = results["Model_3_Full"]["Crisis_Uncertainty"]["PICP"]
-    full_crisis_mpiw = results["Model_3_Full"]["Crisis_Uncertainty"]["MPIW"]
-    
-    ablated_crisis_picp = results["Model_3_Ablated"]["Crisis_Uncertainty"]["PICP"]
-    ablated_crisis_mpiw = results["Model_3_Ablated"]["Crisis_Uncertainty"]["MPIW"]
-
-    delta_picp = full_crisis_picp - ablated_crisis_picp
-    delta_mpiw = full_crisis_mpiw - ablated_crisis_mpiw
-
-    print(f"\n{'='*60}")
-    print("RQ3 FINDINGS: ABLATION IMPACT DURING CRISIS REGIMES")
-    print(f"{'='*60}")
-    print(f"Full Model Crisis PICP    : {full_crisis_picp:.4f}")
-    print(f"Ablated Model Crisis PICP : {ablated_crisis_picp:.4f}")
-    print(f"-> Delta PICP (Coverage loss without anchors) : {delta_picp:+.4f}")
-    print(f"\nFull Model Crisis MPIW    : {full_crisis_mpiw:.4f}")
-    print(f"Ablated Model Crisis MPIW : {ablated_crisis_mpiw:.4f}")
-    print(f"-> Delta MPIW (Interval shrinkage)          : {delta_mpiw:+.4f}")
-
-    # 6. Save Results
-    results_dir = base_dir / "results"
-    results_dir.mkdir(parents=True, exist_ok=True)
-    out_file = results_dir / "rq3_ablation_results_2.json"
-    
+    # 4. Export RQ3 empirical results to JSON
+    out_file = base_dir / "results" / "rq3_ablation_results.json"
+    out_file.parent.mkdir(parents=True, exist_ok=True)
     with open(out_file, "w") as f:
         json.dump(results, f, indent=4)
         
     print(f"\nRQ3 Experiment Complete. Full results saved to: {out_file}")
-
-    if ablated_file.exists():
-        ablated_file.unlink()
 
 if __name__ == "__main__":
     main()
